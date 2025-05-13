@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="C:/Gradle/gradle-8.8-bin/gradle-8.8" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app-comentarios" />
+            <option value="$PROJECT_DIR$/app-documentos" />
+            <option value="$PROJECT_DIR$/app-proyectoInvestigadores" />
+            <option value="$PROJECT_DIR$/app-proyectos" />
+            <option value="$PROJECT_DIR$/app-tareaInvestigadores" />
+            <option value="$PROJECT_DIR$/app-tareas" />
+            <option value="$PROJECT_DIR$/app-usuarios" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

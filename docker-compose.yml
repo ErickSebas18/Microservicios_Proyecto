@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.2
+    container_name: keycloak
+    ports:
+      - "8080:8080"
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    command: ["start-dev"]
+
+  dbserver:
+    image: postgres:alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: mwwQghAdi2O96dgNdbnERcpI5j97VnOd
+      POSTGRES_DB: proyecto_dnpt
+    ports:
+      - "54321:5432"
+    expose:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - dbserver
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+  consul:
+    image: consul:1.15.4
+    ports:
+      - "8500:8500"
+    expose:
+      - "8500"
+    command: >
+      agent -dev 
+      -ui
+      -bind=0.0.0.0 
+      -client=0.0.0.0
+  proxy:
+    image: traefik:3.0.4
+    command: >
+      --api.insecure=true
+      --providers.consulCatalog
+      --providers.consulCatalog.exposedByDefault=false
+      --providers.consulCatalog.endpoint.address=consul:8500
+      --providers.consulCatalog.refreshInterval=10s
+    ports:
+      - "8081:8080"
+      - "7070:80"
+    expose:
+      - "80"
+volumes:
+  keycloak_data:
+  postgres_data:
+  pgadmin_data:

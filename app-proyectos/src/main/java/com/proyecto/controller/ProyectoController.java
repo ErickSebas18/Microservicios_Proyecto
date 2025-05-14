@@ -35,6 +35,9 @@ public class ProyectoController {
     @Autowired
     private ProyectoService proyectoService;
 
+    @Autowired
+    private DocumentoRestClient documentoRestClient;
+
     @PreAuthorize("hasRole('admin_client')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> crearProyecto(@RequestBody CrearProyectoDTO dto){
@@ -82,6 +85,7 @@ public class ProyectoController {
     public ResponseEntity<?> eliminarProyecto(@PathVariable Integer id){
         try{
             proyectoService.eliminarProyecto(id);
+            this.documentoRestClient.deleteDocumentsOnProject(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);

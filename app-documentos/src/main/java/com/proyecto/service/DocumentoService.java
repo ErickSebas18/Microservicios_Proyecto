@@ -3,6 +3,7 @@ package com.proyecto.service;
 import com.proyecto.db.Documento;
 import com.proyecto.db.dto.DocumentoDto;
 import com.proyecto.projections.DocumentoProjection;
+import com.proyecto.repository.ArchivoDocumentoRepository;
 import com.proyecto.repository.DocumentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class DocumentoService {
 
     @Autowired
     private DocumentoRepository documentoRepository;
+
+    @Autowired
+    private ArchivoDocumentoRepository archivoDocumentoRepository;
 
     public List<DocumentoProjection> getAllDocuments() {
         return this.documentoRepository.findAllProjectedBy();
@@ -45,8 +49,9 @@ public class DocumentoService {
             if (documentoActualizado != null) {
                 var documento = documentoRepository.findById(id).get();
                 documento.setNombre(documentoActualizado.getNombre());
-                documento.setRuta(documentoActualizado.getRuta());
                 documento.setFechaSubida(documentoActualizado.getFechaSubida());
+                documento.setDescripcion(documentoActualizado.getDescripcion());
+                documento.setTipo(documentoActualizado.getTipo());
                 this.documentoRepository.save(documento);
                 return "Documento actualizado correctamente";
             } else {
@@ -57,7 +62,19 @@ public class DocumentoService {
         }
     }
 
-    public void eliminarDocumentosPorProyecto(Integer proyectoId) {
-        this.documentoRepository.deleteByProyectoId(proyectoId);
+    public String eliminarDocumentosPorProyecto(Integer proyectoId) {
+        try {
+            List<Documento> docs = this.documentoRepository.findAllByProyectoId(proyectoId);
+            for (Documento doc : docs){
+               if (this.documentoRepository.existsById(doc.getId())) {
+                   this.archivoDocumentoRepository.deleteByDocumentoId(doc.getId());
+               }
+            }
+            this.documentoRepository.deleteByProyectoId(proyectoId);
+            return "Documentos eliminados";
+        }catch (Exception e){
+            return "Error al eliminar documentos: " + e.getMessage();
+        }
+
     }
 }

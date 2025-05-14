@@ -1,6 +1,7 @@
 package com.proyecto.db;
 
 import jakarta.persistence.*;
+
 import java.sql.Timestamp;
 
 @Entity

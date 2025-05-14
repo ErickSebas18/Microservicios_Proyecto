@@ -74,12 +74,13 @@ public class KeycloakServiceImpl implements IKeycloakService{
 
             userResource.get(userId).resetPassword(passwordCred);
             Usuario usuario = new Usuario();
+            usuario.setId(null);
             usuario.setNombre(usuarioDTO.getFirstName() + " " + usuarioDTO.getLastName());
             usuario.setCorreo(usuarioDTO.getEmail());
             usuario.setRol(usuarioDTO.getRol());
             usuario.setFechaCreacion(Timestamp.from(Instant.now()));
 
-            usuarioRepository.save(usuario);
+            this.usuarioRepository.save(usuario);
 
             return userId;
 

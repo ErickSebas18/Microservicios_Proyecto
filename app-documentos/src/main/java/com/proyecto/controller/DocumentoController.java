@@ -1,8 +1,10 @@
 package com.proyecto.controller;
 
-import com.proyecto.clients.ComentarioRestClient;
+import com.proyecto.db.ArchivoDocumento;
 import com.proyecto.db.Documento;
 import com.proyecto.db.dto.DocumentoDto;
+import com.proyecto.service.ArchivoDocumentoService;
+import com.proyecto.service.ComentarioService;
 import com.proyecto.service.DocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +27,10 @@ public class DocumentoController {
     private DocumentoService documentoService;
 
     @Autowired
-    private ComentarioRestClient comentarioRestClient;
+    private ComentarioService comentarioService;
+
+    @Autowired
+    private ArchivoDocumentoService archivoDocumentoService;
 
     @GetMapping
     public ResponseEntity<?> findAllDocuments() {
@@ -35,16 +42,16 @@ public class DocumentoController {
     }
 
     @GetMapping(path = "/todos/{proyectoId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<DocumentoDto> findAllDocumentsByProject(@PathVariable Integer proyectoId) {
+    public List<Documento> findAllDocumentsByProject(@PathVariable Integer proyectoId) {
         return documentoService.getAllDocumentsByProyecto(proyectoId).stream().map(
                 documento -> {
-                    DocumentoDto dto = new DocumentoDto();
-                    dto.setId(documento.getId());
-                    dto.setNombre(documento.getNombre());
-                    dto.setRuta(documento.getRuta());
-                    dto.setFechaSubida(documento.getFechaSubida());
-                    dto.setProyectoId(documento.getProyectoId());
-                    return dto;
+                    Documento dc = new Documento();
+                    dc.setId(documento.getId());
+                    dc.setNombre(documento.getNombre());
+                    dc.setDescripcion(documento.getDescripcion());
+                    dc.setFechaSubida(documento.getFechaSubida());
+                    dc.setProyectoId(documento.getProyectoId());
+                    return dc;
                 }
         ).collect(Collectors.toList());
     }
@@ -59,9 +66,22 @@ public class DocumentoController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> saveDocument(@RequestBody Documento documento) {
+    public ResponseEntity<?> saveDocument(@RequestBody DocumentoDto documento) {
         try {
-            Documento savedDocumento = this.documentoService.saveDocument(documento);
+            Documento doc = new Documento();
+            doc.setNombre(documento.getNombre());
+            doc.setTipo(documento.getTipo());
+            doc.setDescripcion(documento.getDescripcion());
+            doc.setFechaSubida(Timestamp.from(Instant.now()));
+            doc.setUsuarioId(documento.getUsuarioId());
+            doc.setProyectoId(documento.getProyectoId());
+            Documento savedDocumento = this.documentoService.saveDocument(doc);
+
+            ArchivoDocumento archivo =  new ArchivoDocumento();
+            archivo.setDocumentoId(savedDocumento.getId());
+            archivo.setUrl(documento.getUrl());
+            this.archivoDocumentoService.saveFile(archivo);
+
             return new ResponseEntity<>(savedDocumento, null, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -70,18 +90,25 @@ public class DocumentoController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteDocument(@PathVariable Integer id) {
-        if (this.documentoService.deleteDocumentById(id)) {
-            return ResponseEntity.ok("Documento eliminado");
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+
+       try {
+           if (this.documentoService.deleteDocumentById(id)){
+               this.archivoDocumentoService.eliminarArchivoPorDocumento(id);
+               return ResponseEntity.ok("Documento eliminado");
+           } else {
+               return ResponseEntity.badRequest().build();
+           }
+       }
+       catch (Exception e){
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+       }
     }
 
     @DeleteMapping(path = "/eliminar-del-proyecto/{id}")
     public ResponseEntity<?> deleteDocumentsOnProject(@PathVariable Integer id) {
         try {
             this.documentoService.eliminarDocumentosPorProyecto(id);
-            this.comentarioRestClient.eliminarComentarioPorProyecto(id);
+            this.comentarioService.eliminarComentarioPorProyecto(id);
             return ResponseEntity.ok("Documentos eliminados");
         }catch (Exception e){
             return ResponseEntity.badRequest().build();

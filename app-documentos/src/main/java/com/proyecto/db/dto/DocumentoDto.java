@@ -1,15 +1,21 @@
 package com.proyecto.db.dto;
 
+import jakarta.persistence.Column;
+
 import java.sql.Timestamp;
 
 public class DocumentoDto {
-
     private Integer id;
-    private String nombre;
-    private String ruta;
-    private Timestamp fechaSubida;
-    private Integer proyectoId;
 
+    private String nombre;
+    private String descripcion;
+    private String tipo;
+    private String url;
+    private Integer usuarioId;
+    private Integer proyectoId;
+    private Timestamp fechaSubida;
+
+    // Getters y setters
     public Integer getId() {
         return id;
     }
@@ -26,20 +32,36 @@ public class DocumentoDto {
         this.nombre = nombre;
     }
 
-    public String getRuta() {
-        return ruta;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public Timestamp getFechaSubida() {
-        return fechaSubida;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setFechaSubida(Timestamp fechaSubida) {
-        this.fechaSubida = fechaSubida;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public Integer getProyectoId() {
@@ -48,5 +70,13 @@ public class DocumentoDto {
 
     public void setProyectoId(Integer proyectoId) {
         this.proyectoId = proyectoId;
+    }
+
+    public Timestamp getFechaSubida() {
+        return fechaSubida;
+    }
+
+    public void setFechaSubida(Timestamp fechaSubida) {
+        this.fechaSubida = fechaSubida;
     }
 }

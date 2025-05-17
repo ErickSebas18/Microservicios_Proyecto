@@ -46,7 +46,7 @@ public class ComentarioController {
         ).collect(Collectors.toList());
     }*/
 
-    @GetMapping(path = "/de-documento/{documentoId}")
+    @GetMapping(path = "/todos/{documentoId}")
     public List<ComentarioDto> findAllComments(@PathVariable Integer documentoId){
         return comentarioService.findAllCommentsByDocument(documentoId).stream().map(
                 comentario -> {
@@ -98,10 +98,10 @@ public class ComentarioController {
         }
     }
 
-    @DeleteMapping(path = "/comentarios/{id}")
-    public ResponseEntity<?> eliminarComentarioPorProyecto(@PathVariable Integer id) {
+    @DeleteMapping(path = "/todos/{id}")
+    public ResponseEntity<?> eliminarComentariosPorDocumento(@PathVariable Integer id) {
         try {
-            this.comentarioService.eliminarComentarioPorProyecto(id);
+            this.comentarioService.eliminarComentarioPorDocumento(id);
             return ResponseEntity.ok("Comentarios eliminados");
         }catch (Exception e){
             return ResponseEntity.badRequest().build();

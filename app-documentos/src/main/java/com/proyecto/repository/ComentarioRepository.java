@@ -12,5 +12,5 @@ import java.util.List;
 public interface ComentarioRepository extends JpaRepository<Comentario, Integer> {
 
     List<Comentario> findAllByDocumentoId(Integer documentoId);
-    void deleteByProyectoId(Integer proyectoId);
+    void deleteByDocumentoId(Integer documentoId);
 }

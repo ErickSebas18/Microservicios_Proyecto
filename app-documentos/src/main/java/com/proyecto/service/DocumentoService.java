@@ -17,6 +17,9 @@ public class DocumentoService {
     private DocumentoRepository documentoRepository;
 
     @Autowired
+    private ComentarioService comentarioService;
+
+    @Autowired
     private ArchivoDocumentoRepository archivoDocumentoRepository;
 
     public List<DocumentoProjection> getAllDocuments() {
@@ -41,6 +44,7 @@ public class DocumentoService {
             return false;
         }
         this.documentoRepository.deleteById(id);
+        this.comentarioService.eliminarComentarioPorDocumento(id);
         return true;
     }
 
@@ -68,6 +72,7 @@ public class DocumentoService {
             for (Documento doc : docs){
                if (this.documentoRepository.existsById(doc.getId())) {
                    this.archivoDocumentoRepository.deleteByDocumentoId(doc.getId());
+                   this.comentarioService.eliminarComentarioPorDocumento(doc.getId());
                }
             }
             this.documentoRepository.deleteByProyectoId(proyectoId);

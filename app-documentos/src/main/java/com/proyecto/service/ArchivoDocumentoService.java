@@ -1,12 +1,11 @@
 package com.proyecto.service;
 
 import com.proyecto.db.ArchivoDocumento;
-import com.proyecto.db.Comentario;
 import com.proyecto.repository.ArchivoDocumentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@Service
 public class ArchivoDocumentoService {
 
     @Autowired

@@ -54,7 +54,7 @@ public class ComentarioService {
         }
     }
 
-    public void eliminarComentarioPorProyecto(Integer proyectoId) {
-        this.comentarioRepository.deleteByProyectoId(proyectoId);
+    public void eliminarComentarioPorDocumento(Integer docuId) {
+        this.comentarioRepository.deleteByDocumentoId(docuId);
     }
 }

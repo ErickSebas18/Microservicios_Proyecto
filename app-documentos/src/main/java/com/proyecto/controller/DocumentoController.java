@@ -58,11 +58,16 @@ public class DocumentoController {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findDocumentById(@PathVariable Integer id) {
-        var documento = this.documentoService.getDocumentById(id);
-        if (documento != null) {
-            return new ResponseEntity<>(documento, null, HttpStatus.OK);
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+
+       try{
+           var documento = this.documentoService.getDocumentById(id);
+           if (documento != null) {
+               return new ResponseEntity<>(documento, null, HttpStatus.OK);
+           }
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+       }
+        return null;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -108,7 +113,6 @@ public class DocumentoController {
     public ResponseEntity<?> deleteDocumentsOnProject(@PathVariable Integer id) {
         try {
             this.documentoService.eliminarDocumentosPorProyecto(id);
-            this.comentarioService.eliminarComentarioPorProyecto(id);
             return ResponseEntity.ok("Documentos eliminados");
         }catch (Exception e){
             return ResponseEntity.badRequest().build();

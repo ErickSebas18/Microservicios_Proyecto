@@ -5,6 +5,7 @@ public class UsuarioDTO {
     private Integer id;
     private String nombre;
     private String correo;
+    private String rol;
 
     public Integer getId() {
         return id;
@@ -28,5 +29,13 @@ public class UsuarioDTO {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 }

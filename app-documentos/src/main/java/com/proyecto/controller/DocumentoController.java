@@ -1,5 +1,6 @@
 package com.proyecto.controller;
 
+import com.proyecto.clients.UsuarioRestClient;
 import com.proyecto.db.ArchivoDocumento;
 import com.proyecto.db.Documento;
 import com.proyecto.db.dto.DocumentoDto;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,6 +35,9 @@ public class DocumentoController {
     @Autowired
     private ArchivoDocumentoService archivoDocumentoService;
 
+    @Autowired
+    private UsuarioRestClient usuarioRestClient;
+
     @GetMapping
     public ResponseEntity<?> findAllDocuments() {
         try {
@@ -41,17 +47,39 @@ public class DocumentoController {
         }
     }
 
+    @GetMapping(path = "/file/{docId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findFile(@PathVariable Integer docId) {
+        try {
+            ArchivoDocumento archivo = this.archivoDocumentoService.findByDocumentoId(docId);
+            if (archivo == null || archivo.getUrl() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Retornamos solo la data base64 y tipo MIME en un objeto JSON
+            Map<String, Object> response = new HashMap<>();
+            response.put("url", archivo.getUrl());
+            response.put("id", archivo.getId());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno");
+        }
+    }
+
+
     @GetMapping(path = "/todos/{proyectoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Documento> findAllDocumentsByProject(@PathVariable Integer proyectoId) {
         return documentoService.getAllDocumentsByProyecto(proyectoId).stream().map(
-                documento -> {
-                    Documento dc = new Documento();
-                    dc.setId(documento.getId());
-                    dc.setNombre(documento.getNombre());
-                    dc.setDescripcion(documento.getDescripcion());
-                    dc.setFechaSubida(documento.getFechaSubida());
-                    dc.setProyectoId(documento.getProyectoId());
-                    return dc;
+                doc -> {    var usuario = usuarioRestClient.findById(doc.getUsuarioId());
+                    DocumentoDto dto = new DocumentoDto();
+                    dto.setTipo(doc.getTipo());
+                    dto.setNombre(doc.getNombre());
+                    dto.setDescripcion(doc.getDescripcion());
+                    dto.setFechaSubida(doc.getFechaSubida());
+                    dto.setProyectoId(doc.getProyectoId());
+                    dto.setUsuarioNombre(usuario.getNombre());
+                    dto.setId(doc.getId());
+                    return doc;
                 }
         ).collect(Collectors.toList());
     }
@@ -72,24 +100,11 @@ public class DocumentoController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveDocument(@RequestBody DocumentoDto documento) {
-        try {
-            Documento doc = new Documento();
-            doc.setNombre(documento.getNombre());
-            doc.setTipo(documento.getTipo());
-            doc.setDescripcion(documento.getDescripcion());
-            doc.setFechaSubida(Timestamp.from(Instant.now()));
-            doc.setUsuarioId(documento.getUsuarioId());
-            doc.setProyectoId(documento.getProyectoId());
-            Documento savedDocumento = this.documentoService.saveDocument(doc);
-
-            ArchivoDocumento archivo =  new ArchivoDocumento();
-            archivo.setDocumentoId(savedDocumento.getId());
-            archivo.setUrl(documento.getUrl());
-            this.archivoDocumentoService.saveFile(archivo);
-
-            return new ResponseEntity<>(savedDocumento, null, HttpStatus.CREATED);
-        } catch (Exception e) {
+        var res = this.documentoService.saveDocument(documento);
+        if (res == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else {
+            return new ResponseEntity<>(res, null, HttpStatus.CREATED);
         }
     }
 

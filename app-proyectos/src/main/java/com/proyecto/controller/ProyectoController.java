@@ -59,7 +59,6 @@ public class ProyectoController {
         }
     }
 
-    @PreAuthorize("hasRole('admin_client')")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> obtenerProyectoConUsuarios(@PathVariable Integer id){
         try{
@@ -67,6 +66,17 @@ public class ProyectoController {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
         }
+    }
+
+    @GetMapping(path = "/mis-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ProyectoDTO>> getProyectosPorUsuario(@PathVariable Integer id) {
+        List<ProyectoDTO> proyectos = proyectoService.listarMisProyectos(id);
+
+        if (proyectos.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
+        }
+
+        return ResponseEntity.ok(proyectos); // 200 OK con la lista de proyectos
     }
 
     @PreAuthorize("hasRole('admin_client')")
@@ -132,28 +142,7 @@ public class ProyectoController {
 //        }
 //    }
 //
-//    @GetMapping(path = "/responsable-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> findAllProjectsByUser(@PathVariable Integer id) {
-//        try {
-//            return new ResponseEntity<>(this.proyectoService.getAllByUser(id).stream().map(
-//                    proyecto -> {
-//                        var usuario = usuarioRestClient.findById(id);
-//                        ProyectoDTO p = new ProyectoDTO();
-//                        p.setId(proyecto.getId());
-//                        p.setEstado(proyecto.getEstado());
-//                        p.setDescripcion(proyecto.getDescripcion());
-//                        p.setTitulo(proyecto.getTitulo());
-//                        p.setFechaFin(proyecto.getFechaFin());
-//                        p.setFechaInicio(proyecto.getFechaInicio());
-//                        p.setResponsable(usuario.getId());
-//                        p.setResponsableNombre(usuario.getNombre());
-//                        return p;
-//                    }
-//            ).collect(Collectors.toList()), null, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
+
 ///*
 //    @GetMapping(path = "/investigador-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<?> findAllProjectsByInvestigator(@PathVariable Integer id) {

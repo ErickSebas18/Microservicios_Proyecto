@@ -12,7 +12,7 @@ public class ArchivoDocumentoService {
     private ArchivoDocumentoRepository archivoDocumentoRepository;
 
     public ArchivoDocumento findByDocumentoId(Integer documentoId){
-        return archivoDocumentoRepository.findByDocumentoId(documentoId);
+        return this.archivoDocumentoRepository.findByDocumentoId(documentoId);
     }
 
     public ArchivoDocumento saveFile(ArchivoDocumento archivoDocumento) {

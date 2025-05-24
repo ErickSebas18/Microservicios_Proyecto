@@ -26,7 +26,6 @@ public class UsuarioController {
     @Autowired
     private IKeycloakService iKeycloakService;
 
-    @PreAuthorize("hasRole('admin_client')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UsuarioProjection>> findUsers(@RequestParam(required = false) String rol) {
         try {

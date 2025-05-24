@@ -11,7 +11,9 @@ public class DocumentoDto {
     private String descripcion;
     private String tipo;
     private String url;
+    private Double tamanio;
     private Integer usuarioId;
+    private String usuarioNombre;
     private Integer proyectoId;
     private Timestamp fechaSubida;
 
@@ -78,5 +80,21 @@ public class DocumentoDto {
 
     public void setFechaSubida(Timestamp fechaSubida) {
         this.fechaSubida = fechaSubida;
+    }
+
+    public Double getTamanio() {
+        return tamanio;
+    }
+
+    public void setTamanio(Double tamanio) {
+        this.tamanio = tamanio;
+    }
+
+    public String getUsuarioNombre() {
+        return usuarioNombre;
+    }
+
+    public void setUsuarioNombre(String usuarioNombre) {
+        this.usuarioNombre = usuarioNombre;
     }
 }

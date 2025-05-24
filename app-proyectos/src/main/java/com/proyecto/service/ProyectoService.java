@@ -36,6 +36,9 @@ public class ProyectoService{
     @Autowired
     private UsuarioRestClient usuarioRestClient;
 
+    @Autowired
+    private ProyectoUsuarioRepository repository;
+
     //Crear un proyecto
     public ProyectoDTO guardarProyecto(CrearProyectoDTO proyectoDto){
         try{
@@ -67,6 +70,18 @@ public class ProyectoService{
     public List<ProyectoDTO> listarProyectos(){
         try{
             return proyectoRepository.findAll().stream().map(ProyectoDTO::toProyectoDTO).collect(Collectors.toList());
+        } catch (Exception e){
+            throw new RuntimeException("Error al listar los proyectos");
+        }
+    }
+
+    //Obtener todos mis proyectos
+    public List<ProyectoDTO> listarMisProyectos(Integer id){
+        try{
+            List<Proyecto> proyectos = proyectoUsuarioRepository.findProyectosByUsuarioId(id);
+            return proyectos.stream()
+                    .map(ProyectoDTO::toProyectoDTO)
+                    .collect(Collectors.toList());
         } catch (Exception e){
             throw new RuntimeException("Error al listar los proyectos");
         }

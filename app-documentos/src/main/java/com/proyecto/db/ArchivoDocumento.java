@@ -12,8 +12,11 @@ public class ArchivoDocumento {
 
     @Column(name = "documento_id")
     private Integer documentoId;
-
+    private Double tamanio;
+    @Lob
+    @Column(name = "url", columnDefinition = "TEXT")
     private String url;
+
 
     // Getters y setters
     public Integer getId() {
@@ -38,5 +41,13 @@ public class ArchivoDocumento {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Double getTamanio() {
+        return tamanio;
+    }
+
+    public void setTamanio(Double tamanio) {
+        this.tamanio = tamanio;
     }
 }

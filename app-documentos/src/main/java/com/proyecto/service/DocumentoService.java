@@ -1,13 +1,18 @@
 package com.proyecto.service;
 
+import com.proyecto.db.ArchivoDocumento;
 import com.proyecto.db.Documento;
 import com.proyecto.db.dto.DocumentoDto;
 import com.proyecto.projections.DocumentoProjection;
 import com.proyecto.repository.ArchivoDocumentoRepository;
 import com.proyecto.repository.DocumentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -22,6 +27,9 @@ public class DocumentoService {
     @Autowired
     private ArchivoDocumentoRepository archivoDocumentoRepository;
 
+    @Autowired
+    private ArchivoDocumentoService archivoDocumentoService;
+
     public List<DocumentoProjection> getAllDocuments() {
         return this.documentoRepository.findAllProjectedBy();
     }
@@ -34,9 +42,28 @@ public class DocumentoService {
         return this.documentoRepository.findById(id).orElse(null);
     }
 
-    public Documento saveDocument(Documento documento) {
-        documento.setId(null);
-        return this.documentoRepository.save(documento);
+    public Documento saveDocument(DocumentoDto documento) {
+        try {
+            Documento doc = new Documento();
+            doc.setNombre(documento.getNombre());
+            doc.setTipo(documento.getTipo());
+            doc.setDescripcion(documento.getDescripcion());
+            doc.setFechaSubida(Timestamp.from(Instant.now()));
+            doc.setUsuarioId(documento.getUsuarioId());
+            doc.setProyectoId(documento.getProyectoId());
+            doc.setId(null);
+            Documento savedDocumento = this.documentoRepository.save(doc);
+
+            ArchivoDocumento archivo =  new ArchivoDocumento();
+            archivo.setDocumentoId(savedDocumento.getId());
+            archivo.setTamanio(documento.getTamanio());
+            archivo.setUrl(documento.getUrl());
+            this.archivoDocumentoService.saveFile(archivo);
+
+            return savedDocumento;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Boolean deleteDocumentById(Integer id) {

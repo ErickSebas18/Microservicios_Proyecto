@@ -1,6 +1,7 @@
 package com.proyecto.service;
 
 import com.proyecto.db.Usuario;
+import com.proyecto.db.dto.UsuarioDTO;
 import com.proyecto.db.dto.UsuarioKeycloakDto;
 import com.proyecto.projections.UsuarioProjection;
 import com.proyecto.repository.UsuarioRepository;
@@ -28,8 +29,8 @@ public class UsuarioService {
         return this.usuarioRepository.findByCorreo(correo);
     }
 
-    public Usuario getById(Integer id) {
-        return this.usuarioRepository.findById(id).orElse(null);
+    public UsuarioProjection getById(Integer id) {
+        return this.usuarioRepository.findUsuarioDTOById(id);
     }
 
     public Usuario saveUser(Usuario usuario) {

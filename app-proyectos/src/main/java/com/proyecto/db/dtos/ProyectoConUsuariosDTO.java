@@ -16,7 +16,7 @@ public class ProyectoConUsuariosDTO {
     private Timestamp fechaFin;
     private String estado;
     private List<UsuarioDTO> usuarios;
-    private List<TareaDTO> tareas;
+//    private List<TareaDTO> tareas;
 
     public Integer getId() {
         return id;
@@ -74,13 +74,13 @@ public class ProyectoConUsuariosDTO {
         this.usuarios = usuarios;
     }
 
-    public List<TareaDTO> getTareas() {
-        return tareas;
-    }
-
-    public void setTareas(List<TareaDTO> tareas) {
-        this.tareas = tareas;
-    }
+//    public List<TareaDTO> getTareas() {
+//        return tareas;
+//    }
+//
+//    public void setTareas(List<TareaDTO> tareas) {
+//        this.tareas = tareas;
+//    }
 
     public static ProyectoConUsuariosDTO toProyectoConUsuariosDTO(Proyecto p, List<UsuarioDTO> usuarios){
         ProyectoConUsuariosDTO dto = new ProyectoConUsuariosDTO();
@@ -91,9 +91,9 @@ public class ProyectoConUsuariosDTO {
         dto.setFechaFin(p.getFechaFin());
         dto.setUsuarios(usuarios);
         dto.setEstado(p.getEstado());
-        List<TareaDTO> tareasDTO = p.getTareas().stream().map(TareaDTO::toTareaDTO).collect(Collectors.toList());
-
-        dto.setTareas(tareasDTO);
+//        List<TareaDTO> tareasDTO = p.getTareas().stream().map(TareaDTO::toTareaDTO).collect(Collectors.toList());
+//
+//        dto.setTareas(tareasDTO);
         return dto;
     }
 }

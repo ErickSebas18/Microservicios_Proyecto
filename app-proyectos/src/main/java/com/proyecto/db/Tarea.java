@@ -1,5 +1,6 @@
 package com.proyecto.db;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Cleanup;
@@ -24,6 +25,7 @@ public class Tarea {
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp fechaVencimiento;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "proyecto_id")
     private Proyecto proyecto;

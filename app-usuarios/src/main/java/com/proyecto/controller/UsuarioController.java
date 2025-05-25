@@ -1,6 +1,7 @@
 package com.proyecto.controller;
 
 import com.proyecto.db.Usuario;
+import com.proyecto.db.dto.UsuarioDTO;
 import com.proyecto.db.dto.UsuarioKeycloakDto;
 import com.proyecto.projections.UsuarioProjection;
 import com.proyecto.service.IKeycloakService;
@@ -51,7 +52,7 @@ public class UsuarioController {
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Usuario> findUserById(@PathVariable Integer id) {
+    public ResponseEntity<UsuarioProjection> findUserById(@PathVariable Integer id) {
         var usuario = usuarioService.getById(id);
         if (usuario != null) {
             return new ResponseEntity<>(usuario, null, HttpStatus.OK);

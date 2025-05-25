@@ -38,6 +38,11 @@ public class TareaController {
     public ResponseEntity<?> obtenerTarea(@PathVariable Integer id) {
         return ResponseEntity.ok(tareaService.listarPorProyecto(id));
     }
+    // Obtener tarea por usuario
+    @GetMapping(path = "/mis-tareas/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> obtenerMisTarea(@PathVariable Integer id) {
+        return ResponseEntity.ok(tareaService.listarPorUsuario(id));
+    }
 
     // Actualizar tarea
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

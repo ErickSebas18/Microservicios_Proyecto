@@ -1,5 +1,6 @@
 package com.proyecto.db;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +11,8 @@ public class TareaUsuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tarea_usua_id")
     private Integer id;
+
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "tarea_id")
     private Tarea tarea;

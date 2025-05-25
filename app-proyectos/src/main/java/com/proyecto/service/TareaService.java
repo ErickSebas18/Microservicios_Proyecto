@@ -7,6 +7,7 @@ import com.proyecto.db.dtos.CrearTareaDTO;
 import com.proyecto.db.dtos.ProyectoDTO;
 import com.proyecto.db.dtos.TareaConUsuariosDTO;
 import com.proyecto.db.dtos.TareaDTO;
+import com.proyecto.projections.TareaProjection;
 import com.proyecto.repository.ProyectoRepository;
 import com.proyecto.repository.TareaRepository;
 import com.proyecto.repository.TareaUsuarioRepository;
@@ -36,6 +37,7 @@ public class TareaService {
             tarea.setDescripcion(dto.getDescripcion());
             tarea.setEstado(dto.getEstado());
             tarea.setFechaAsignacion(dto.getFechaAsignacion());
+            tarea.setFechaVencimiento(dto.getFechaVencimiento());
             tarea.setProyecto(proyecto);
             tarea = tareaRepository.save(tarea);
 
@@ -61,12 +63,27 @@ public class TareaService {
         }
     }
 
-    public List<TareaDTO> listarPorProyecto(Integer proyectoId){
-        try{
+    public List<TareaDTO> listarPorProyecto(Integer proyectoId) {
+        try {
             List<Tarea> tareas = tareaRepository.findByProyectoId(proyectoId);
-            return tareas.stream().map(TareaDTO::toTareaDTO).collect(Collectors.toList());
-        } catch (Exception e){
+            return tareas.stream()
+                    .map(t -> {
+                        TareaDTO dto = TareaDTO.toTareaDTO(t);
+                        dto.setUsuarios(this.obtenerUsuariosPorTarea(t.getId()));
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
             throw new RuntimeException("Error al listar las tareas del proyecto");
+        }
+    }
+
+    public List<TareaProjection> listarPorUsuario(Integer usuarioId) {
+        try {
+            List<TareaProjection> tareas = tareaUsuarioRepository.findTareasByUsuarioId(usuarioId);
+            return tareas;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al listar las tareas del usuario");
         }
     }
 

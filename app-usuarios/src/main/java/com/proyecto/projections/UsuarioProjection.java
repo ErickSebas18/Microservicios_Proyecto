@@ -11,6 +11,4 @@ public interface UsuarioProjection {
     String getCorreo();
 
     String getRol();
-
-    Timestamp getFechaCreacion();
 }

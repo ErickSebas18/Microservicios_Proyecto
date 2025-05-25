@@ -3,6 +3,7 @@ package com.proyecto.db.dtos;
 import com.proyecto.db.Tarea;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class TareaDTO {
 
@@ -12,6 +13,7 @@ public class TareaDTO {
     private Timestamp fechaAsignacion;
     private Timestamp fechaVencimiento;
     private Integer proyectoId;
+    private List<Integer> usuarios;
 
     public Integer getId() {
         return id;
@@ -59,6 +61,14 @@ public class TareaDTO {
 
     public void setProyectoId(Integer proyectoId) {
         this.proyectoId = proyectoId;
+    }
+
+    public List<Integer> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Integer> usuarios) {
+        this.usuarios = usuarios;
     }
 
     public static TareaDTO toTareaDTO(Tarea t){

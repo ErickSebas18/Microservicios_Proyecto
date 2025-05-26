@@ -3,6 +3,7 @@ package com.proyecto.controller;
 import com.proyecto.db.EmailRequest;
 import com.proyecto.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,12 @@ public class EmailController {
     private EmailService emailService;
 
     @PostMapping("/enviar")
-    public String enviarCorreo(@RequestBody EmailRequest emailRequest) {
-        this.emailService.enviarCorreo(emailRequest.getPara(), emailRequest.getAsunto(), emailRequest.getMensaje());
-        return "Correo enviado a " + emailRequest.getPara();
+    public ResponseEntity<?> enviarCorreo(@RequestBody EmailRequest emailRequest) {
+        try {
+            emailService.enviarCorreo(emailRequest.getPara(), emailRequest.getAsunto(), emailRequest.getMensaje());
+            return ResponseEntity.ok("Correo enviado a " + emailRequest.getPara());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al enviar el correo: " + e.getMessage());
+        }
     }
 }

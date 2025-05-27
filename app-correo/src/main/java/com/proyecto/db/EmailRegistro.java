@@ -16,4 +16,5 @@ public class EmailRegistro {
     private String para;
     private String asunto;
     private String mensaje;
+    private String servicio;
 }

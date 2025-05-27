@@ -107,13 +107,21 @@ public class UsuarioController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UsuarioKeycloakDto usuarioActualizado) {
         try {
-            System.out.println("Entra aquí");
             var mail = usuarioService.getById(id).getCorreo();
             var user = iKeycloakService.searchUserByEmail(mail);
+
+            // Esto lanza excepción si falla
             iKeycloakService.updateUser(user.getId(), usuarioActualizado);
-            return new ResponseEntity<>(usuarioService.updateUser(id, usuarioActualizado), null, HttpStatus.OK);
+
+            // Solo se ejecuta si no hubo error en Keycloak
+            var updatedUser = usuarioService.updateUser(id, usuarioActualizado);
+            return ResponseEntity.ok(updatedUser);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar el usuario.");
         }
     }
+
 }

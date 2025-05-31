@@ -108,4 +108,20 @@ public class EventoController {
             return ResponseEntity.badRequest().body("Error al eliminar el evento: " + e.getMessage());
         }
     }
+
+    @GetMapping("/contar-todos")
+    public ResponseEntity<Long> contarTodosEventos() {
+        long total = eventoService.contarTodosLosEventos();
+        return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/activos")
+    public List<Evento> listarEventosActivos() {
+        return eventoService.obtenerEventosActivos();
+    }
+
+    @GetMapping("/promedio-duracion-horas")
+    public Double promedioDuracionHoras() {
+        return eventoService.obtenerPromedioDuracionHoras();
+    }
 }

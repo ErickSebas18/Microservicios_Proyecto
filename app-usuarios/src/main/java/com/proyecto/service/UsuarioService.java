@@ -1,6 +1,7 @@
 package com.proyecto.service;
 
 import com.proyecto.db.Usuario;
+import com.proyecto.db.dto.ConteoUsuariosPorHoraDTO;
 import com.proyecto.db.dto.UsuarioDTO;
 import com.proyecto.db.dto.UsuarioKeycloakDto;
 import com.proyecto.projections.UsuarioProjection;
@@ -8,8 +9,8 @@ import com.proyecto.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class UsuarioService {
@@ -61,5 +62,37 @@ public class UsuarioService {
         } catch (Exception e) {
             return "Error al actualizar el usuario : " + e.getMessage();
         }
+    }
+
+    public Map<String, Long> contarUsuariosPorRol() {
+        List<Object[]> resultados = this.usuarioRepository.contarUsuariosPorRol();
+        Map<String, Long> conteoPorRol = new HashMap<>();
+
+        for (Object[] resultado : resultados) {
+            String rol = (String) resultado[0];
+            Long cantidad = (Long) resultado[1];
+            conteoPorRol.put(rol, cantidad);
+        }
+
+        return conteoPorRol;
+    }
+
+    public long contarTodosLosUsuarios() {
+        return this.usuarioRepository.count();
+    }
+
+    public List<ConteoUsuariosPorHoraDTO> contarUsuariosPorHora() {
+        List<Object[]> resultados = usuarioRepository.countUsuariosPorHora();
+        List<ConteoUsuariosPorHoraDTO> conteos = new ArrayList<>();
+
+        for (Object[] fila : resultados) {
+            LocalDate dia = ((java.sql.Date) fila[0]).toLocalDate();
+            int hora = ((Number) fila[1]).intValue();
+            long cantidad = ((Number) fila[2]).longValue();
+
+            conteos.add(new ConteoUsuariosPorHoraDTO(dia, hora, cantidad));
+        }
+
+        return conteos;
     }
 }

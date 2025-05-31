@@ -46,4 +46,8 @@ public class ArchivoDocumentoService {
     public void eliminarArchivoPorDocumento(Integer documentoId) {
         this.archivoDocumentoRepository.deleteByDocumentoId(documentoId);
     }
+
+    public long contarTodosLosArchivos() {
+        return this.archivoDocumentoRepository.count();
+    }
 }

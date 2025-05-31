@@ -1,19 +1,20 @@
 package com.proyecto.service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.proyecto.clients.UsuarioRestClient;
+import com.proyecto.db.Proyecto;
 import com.proyecto.db.ProyectoUsuario;
 import com.proyecto.db.Tarea;
 import com.proyecto.db.dtos.*;
+import com.proyecto.repository.ProyectoRepository;
 import com.proyecto.repository.ProyectoUsuarioRepository;
 import com.proyecto.repository.TareaRepository;
 import com.proyecto.repository.TareaUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.proyecto.db.Proyecto;
-import com.proyecto.repository.ProyectoRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.proyecto.db.dtos.ProyectoConUsuariosDTO.toProyectoConUsuariosDTO;
 import static com.proyecto.db.dtos.ProyectoDTO.toProyectoDTO;
@@ -144,6 +145,31 @@ public class ProyectoService{
         } catch (Exception e){
             throw new RuntimeException("Error al eliminar el proyecto");
         }
+    }
+
+    public long contarTodosLosProyectos() {
+        return this.proyectoRepository.count();
+    }
+
+    public List<ConteoPorEstadoDTO> contarPorEstado() {
+        return proyectoRepository.contarProyectosPorEstado()
+                .stream()
+                .map(obj -> new ConteoPorEstadoDTO((String) obj[0], (Long) obj[1]))
+                .collect(Collectors.toList());
+    }
+
+    public List<ConteoProyectosPorMesDTO> contarProyectosPorMes() {
+        List<Object[]> resultados = proyectoRepository.countProyectosPorMes();
+        List<ConteoProyectosPorMesDTO> conteos = new ArrayList<>();
+
+        for (Object[] fila : resultados) {
+            int anio = ((Number) fila[0]).intValue();
+            int mes = ((Number) fila[1]).intValue();
+            long cantidad = ((Number) fila[2]).longValue();
+            conteos.add(new ConteoProyectosPorMesDTO(mes, anio, cantidad));
+        }
+
+        return conteos;
     }
 //    public List<Proyecto> getAllProjects() {
 //        return proyectoRepository.findAllProjectedBy();

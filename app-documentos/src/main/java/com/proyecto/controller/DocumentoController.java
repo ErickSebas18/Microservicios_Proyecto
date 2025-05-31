@@ -143,4 +143,10 @@ public class DocumentoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+    @GetMapping("/contar-todos")
+    public ResponseEntity<Long> contarTodosLosArchivos() {
+        long total = archivoDocumentoService.contarTodosLosArchivos();
+        return ResponseEntity.ok(total);
+    }
 }

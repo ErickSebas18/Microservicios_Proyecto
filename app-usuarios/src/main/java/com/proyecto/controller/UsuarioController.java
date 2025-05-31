@@ -1,7 +1,6 @@
 package com.proyecto.controller;
 
-import com.proyecto.db.Usuario;
-import com.proyecto.db.dto.UsuarioDTO;
+import com.proyecto.db.dto.ConteoUsuariosPorHoraDTO;
 import com.proyecto.db.dto.UsuarioKeycloakDto;
 import com.proyecto.projections.UsuarioProjection;
 import com.proyecto.service.IKeycloakService;
@@ -15,6 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -124,4 +124,21 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/contar-por-rol")
+    public ResponseEntity<Map<String, Long>> contarUsuariosPorRol() {
+        Map<String, Long> conteo = this.usuarioService.contarUsuariosPorRol();
+        return ResponseEntity.ok(conteo);
+    }
+
+    @GetMapping("/contar-todos")
+    public ResponseEntity<Long> contarTodosLosUsuarios() {
+        long total = usuarioService.contarTodosLosUsuarios();
+        return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/conteo-por-hora")
+    public ResponseEntity<List<ConteoUsuariosPorHoraDTO>> contarUsuariosPorHora() {
+        List<ConteoUsuariosPorHoraDTO> conteos = usuarioService.contarUsuariosPorHora();
+        return ResponseEntity.ok(conteos);
+    }
 }

@@ -1,12 +1,9 @@
 package com.proyecto.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.proyecto.clients.*;
-import com.proyecto.db.dtos.CrearProyectoDTO;
-import com.proyecto.db.dtos.ProyectoConUsuariosDTO;
-import com.proyecto.db.dtos.ProyectoDTO;
+import com.proyecto.db.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.db.Proyecto;
 import com.proyecto.service.ProyectoService;
-
-import javax.print.attribute.standard.Media;
 
 @RestController
 @RequestMapping("/proyectos")
@@ -102,7 +96,22 @@ public class ProyectoController {
         }
     }
 
+    @GetMapping("/contar-todos")
+    public ResponseEntity<Long> contarTodosLosProyectos() {
+        long total = proyectoService.contarTodosLosProyectos();
+        return ResponseEntity.ok(total);
+    }
 
+    @GetMapping("/contar-por-estado")
+    public List<ConteoPorEstadoDTO> contarPorEstado() {
+        return proyectoService.contarPorEstado();
+    }
+
+    @GetMapping("/conteo-por-mes")
+    public ResponseEntity<List<ConteoProyectosPorMesDTO>> contarProyectosPorMes() {
+        List<ConteoProyectosPorMesDTO> conteos = proyectoService.contarProyectosPorMes();
+        return ResponseEntity.ok(conteos);
+    }
 //    @Autowired
 //    private UsuarioRestClient usuarioRestClient;
 //

@@ -96,4 +96,16 @@ public class EventoService {
         this.eventoUsuarioRepository.deleteByEventoId(id);
         this.eventoRepository.deleteById(id);
     }
+
+    public long contarTodosLosEventos() {
+        return this.eventoRepository.count();
+    }
+
+    public List<Evento> obtenerEventosActivos() {
+        return eventoRepository.eventosActivos();
+    }
+
+    public Double obtenerPromedioDuracionHoras() {
+        return eventoRepository.promedioDuracionHoras();
+    }
 }

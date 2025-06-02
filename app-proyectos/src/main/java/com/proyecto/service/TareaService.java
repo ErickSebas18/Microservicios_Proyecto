@@ -63,6 +63,10 @@ public class TareaService {
         }
     }
 
+    public List<TareaProjection> obtenerTareasProyectadasPorProyecto(Integer proyectoId) {
+        return tareaRepository.findProjectedByProyectoId(proyectoId);
+    }
+
     public List<TareaDTO> listarPorProyecto(Integer proyectoId) {
         try {
             List<Tarea> tareas = tareaRepository.findByProyectoId(proyectoId);

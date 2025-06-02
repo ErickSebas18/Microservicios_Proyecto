@@ -62,6 +62,11 @@ public class ProyectoController {
         }
     }
 
+    @GetMapping("/proyectos-por-usuario/{usuarioId}")
+    public List<Integer> obtenerProyectosPorUsuario(@PathVariable Integer usuarioId) {
+        return proyectoService.obtenerIdsProyectosPorUsuario(usuarioId);
+    }
+
     @GetMapping(path = "/mis-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProyectoDTO>> getProyectosPorUsuario(@PathVariable Integer id) {
         List<ProyectoDTO> proyectos = proyectoService.listarMisProyectos(id);

@@ -76,6 +76,11 @@ public class ProyectoService{
         }
     }
 
+    // Obtener ids de proyectos segun usuario
+    public List<Integer> obtenerIdsProyectosPorUsuario(Integer usuarioId) {
+        return proyectoUsuarioRepository.findProyectoIdsByUsuarioId(usuarioId);
+    }
+
     //Obtener todos mis proyectos
     public List<ProyectoDTO> listarMisProyectos(Integer id){
         try{

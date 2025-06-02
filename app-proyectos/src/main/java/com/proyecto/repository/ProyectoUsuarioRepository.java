@@ -17,4 +17,7 @@ public interface ProyectoUsuarioRepository extends JpaRepository<ProyectoUsuario
     void deleteByProyecto(Proyecto proyecto);
     @Query("SELECT pu.proyecto FROM ProyectoUsuario pu WHERE pu.usuarioId = :usuarioId")
     List<Proyecto> findProyectosByUsuarioId(@Param("usuarioId") Integer usuarioId);
+
+    @Query("SELECT pu.proyecto.id FROM ProyectoUsuario pu WHERE pu.usuarioId = :usuarioId")
+    List<Integer> findProyectoIdsByUsuarioId(@Param("usuarioId") Integer usuarioId);
 }

@@ -24,7 +24,7 @@ import java.util.UUID;
 @ConditionalOnProperty(name = "consul.enabled", havingValue = "true", matchIfMissing = true)
 @SpringBootApplication
 @EnableFeignClients
-public class NotificacionesLifeCycle implements ApplicationListener<WebServerInitializedEvent> {
+public class CorreoLifeCycle implements ApplicationListener<WebServerInitializedEvent> {
 
     @Value("${consul.host:localhost}")
     private String consulHost;
@@ -35,7 +35,7 @@ public class NotificacionesLifeCycle implements ApplicationListener<WebServerIni
     @Value("${consul.token:}")
     private String consulToken;
 
-    private String serviceName = "app-notificaciones";
+    private String serviceName = "app-correo";
 
     private String serviceId;
     @Value("${server.port}")
@@ -106,6 +106,6 @@ public class NotificacionesLifeCycle implements ApplicationListener<WebServerIni
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(NotificacionesLifeCycle.class, args);
+        SpringApplication.run(CorreoLifeCycle.class, args);
     }
 }

@@ -3,6 +3,7 @@ package com.proyecto.controller;
 import com.proyecto.db.dtos.CrearTareaDTO;
 import com.proyecto.db.dtos.TareaConUsuariosDTO;
 import com.proyecto.db.dtos.TareaDTO;
+import com.proyecto.projections.TareaProjection;
 import com.proyecto.service.TareaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,6 +43,17 @@ public class TareaController {
     @GetMapping(path = "/mis-tareas/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> obtenerMisTarea(@PathVariable Integer id) {
         return ResponseEntity.ok(tareaService.listarPorUsuario(id));
+    }
+
+    @GetMapping(path = "/mis-tareas-responsable/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> obtenerResponsableTareas(@PathVariable Integer id) {
+        List<TareaProjection> tareas = tareaService.obtenerTareasProyectadasPorProyecto(id);
+
+        if (tareas.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        }
+
+        return ResponseEntity.ok(tareas); // 200 OK con la lista de tareas
     }
 
     // Actualizar tarea

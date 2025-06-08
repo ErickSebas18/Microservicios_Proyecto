@@ -27,6 +27,7 @@ public class UsuarioController {
     @Autowired
     private IKeycloakService iKeycloakService;
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UsuarioProjection>> findUsers(@RequestParam(required = false) String rol) {
         try {
@@ -51,6 +52,7 @@ public class UsuarioController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UsuarioProjection> findUserById(@PathVariable Integer id) {
         var usuario = usuarioService.getById(id);
@@ -60,6 +62,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/keycloak/by-mail/{mail}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findUserByEmail(@PathVariable String mail) {
         var usuario = iKeycloakService.searchUserByEmail(mail);
@@ -70,6 +73,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/db/by-mail/{mail}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findUserDBByEmail(@PathVariable String mail) {
         var usuario = usuarioService.getUserByCorreo(mail);
@@ -101,9 +105,9 @@ public class UsuarioController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PutMapping(path = "/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UsuarioKeycloakDto usuarioActualizado) {
         try {
@@ -124,18 +128,35 @@ public class UsuarioController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
+    @PutMapping("/{id}/activo")
+    public ResponseEntity<String> cambiarActivo(@PathVariable Integer id, @RequestBody Boolean activo) {
+        String resultado = usuarioService.actualizarActivo(id, activo);
+        return ResponseEntity.ok(resultado);
+    }
+
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
+    @PutMapping("/{id}/ultimo-acceso")
+    public ResponseEntity<String> actualizarUltimoAcceso(@PathVariable Integer id) {
+        String respuesta = usuarioService.actualizarUltimoAcceso(id);
+        return ResponseEntity.ok(respuesta);
+    }
+
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/contar-por-rol")
     public ResponseEntity<Map<String, Long>> contarUsuariosPorRol() {
         Map<String, Long> conteo = this.usuarioService.contarUsuariosPorRol();
         return ResponseEntity.ok(conteo);
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/contar-todos")
     public ResponseEntity<Long> contarTodosLosUsuarios() {
         long total = usuarioService.contarTodosLosUsuarios();
         return ResponseEntity.ok(total);
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/conteo-por-hora")
     public ResponseEntity<List<ConteoUsuariosPorHoraDTO>> contarUsuariosPorHora() {
         List<ConteoUsuariosPorHoraDTO> conteos = usuarioService.contarUsuariosPorHora();

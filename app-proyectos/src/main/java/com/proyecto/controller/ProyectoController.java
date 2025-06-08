@@ -53,6 +53,7 @@ public class ProyectoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> obtenerProyectoConUsuarios(@PathVariable Integer id){
         try{
@@ -62,11 +63,13 @@ public class ProyectoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/proyectos-por-usuario/{usuarioId}")
     public List<Integer> obtenerProyectosPorUsuario(@PathVariable Integer usuarioId) {
         return proyectoService.obtenerIdsProyectosPorUsuario(usuarioId);
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/mis-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProyectoDTO>> getProyectosPorUsuario(@PathVariable Integer id) {
         List<ProyectoDTO> proyectos = proyectoService.listarMisProyectos(id);
@@ -101,17 +104,20 @@ public class ProyectoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/contar-todos")
     public ResponseEntity<Long> contarTodosLosProyectos() {
         long total = proyectoService.contarTodosLosProyectos();
         return ResponseEntity.ok(total);
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/contar-por-estado")
     public List<ConteoPorEstadoDTO> contarPorEstado() {
         return proyectoService.contarPorEstado();
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/conteo-por-mes")
     public ResponseEntity<List<ConteoProyectosPorMesDTO>> contarProyectosPorMes() {
         List<ConteoProyectosPorMesDTO> conteos = proyectoService.contarProyectosPorMes();

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,7 @@ public class DocumentoController {
     @Autowired
     private UsuarioRestClient usuarioRestClient;
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping
     public ResponseEntity<?> findAllDocuments() {
         try {
@@ -47,6 +49,7 @@ public class DocumentoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/file/{docId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findFile(@PathVariable Integer docId) {
         try {
@@ -66,7 +69,7 @@ public class DocumentoController {
         }
     }
 
-
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/todos/{proyectoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Documento> findAllDocumentsByProject(@PathVariable Integer proyectoId) {
         return documentoService.getAllDocumentsByProyecto(proyectoId).stream().map(
@@ -84,6 +87,7 @@ public class DocumentoController {
         ).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findDocumentById(@PathVariable Integer id) {
 
@@ -98,6 +102,7 @@ public class DocumentoController {
         return null;
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveDocument(@RequestBody DocumentoDto documento) {
         var res = this.documentoService.saveDocument(documento);
@@ -108,6 +113,7 @@ public class DocumentoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteDocument(@PathVariable Integer id) {
 
@@ -124,6 +130,7 @@ public class DocumentoController {
        }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @DeleteMapping(path = "/eliminar-del-proyecto/{id}")
     public ResponseEntity<?> deleteDocumentsOnProject(@PathVariable Integer id) {
         try {
@@ -134,6 +141,7 @@ public class DocumentoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PutMapping(path = "/{id}")
     public ResponseEntity<?> updateDocument(@PathVariable Integer id, @RequestBody Documento documentoActualizado) {
         try {
@@ -144,6 +152,7 @@ public class DocumentoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/contar-todos")
     public ResponseEntity<Long> contarTodosLosArchivos() {
         long total = archivoDocumentoService.contarTodosLosArchivos();

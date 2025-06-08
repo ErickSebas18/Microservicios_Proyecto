@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,7 @@ public class ComentarioController {
         ).collect(Collectors.toList());
     }*/
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/todos/{documentoId}")
     public List<ComentarioDto> findAllComments(@PathVariable Integer documentoId){
         return comentarioService.findAllCommentsByDocument(documentoId).stream().map(
@@ -70,6 +72,7 @@ public class ComentarioController {
         }
     }*/
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
      @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
      public ResponseEntity<?> findCommentById(@PathVariable Integer id) {
         var comentario = this.comentarioService.getCommentById(id);
@@ -79,6 +82,7 @@ public class ComentarioController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
      }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveComment(@RequestBody Comentario comentario) {
         try {
@@ -89,6 +93,7 @@ public class ComentarioController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable Integer id) {
         if (this.comentarioService.deleteCommentById(id)) {
@@ -98,6 +103,7 @@ public class ComentarioController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @DeleteMapping(path = "/todos/{id}")
     public ResponseEntity<?> eliminarComentariosPorDocumento(@PathVariable Integer id) {
         try {
@@ -108,6 +114,7 @@ public class ComentarioController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PutMapping(path = "/{id}")
     public ResponseEntity<?> updateComment(@PathVariable Integer id, @RequestBody Comentario comentarioActualizado) {
         try {

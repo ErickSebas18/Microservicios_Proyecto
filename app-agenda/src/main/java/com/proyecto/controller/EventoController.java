@@ -7,6 +7,7 @@ import com.proyecto.service.EventoService;
 import com.proyecto.service.EventoUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class EventoController {
     private EventoUsuarioService eventoUsuarioService;
 
     // Crear evento con usuarios asignados
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PostMapping
     public ResponseEntity<?> crearEvento(@RequestBody EventoDTO eventoDTO) {
         try {
@@ -33,6 +35,7 @@ public class EventoController {
     }
 
     // Obtener todos los eventos
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping
     public ResponseEntity<?> obtenerTodos() {
         try {
@@ -44,6 +47,7 @@ public class EventoController {
     }
 
     // Obtener evento por ID
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
         try {
@@ -55,6 +59,7 @@ public class EventoController {
     }
 
     // Obtener todos los usuarios asignados a un evento
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/usuarios-asignados/{eventoId}")
     public ResponseEntity<?> obtenerUsuariosPorEvento(@PathVariable Integer eventoId) {
         try {
@@ -66,6 +71,7 @@ public class EventoController {
     }
 
     // Obtener eventos asignados a un usuario
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/asignados/{usuarioId}")
     public ResponseEntity<?> obtenerEventosAsignados(@PathVariable Integer usuarioId) {
         try {
@@ -77,6 +83,7 @@ public class EventoController {
     }
 
     // Obtener eventos creados por un usuario
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/creados/{usuarioId}")
     public ResponseEntity<?> obtenerEventosCreadosPorUsuario(@PathVariable Integer usuarioId) {
         try {
@@ -88,6 +95,7 @@ public class EventoController {
     }
 
     // Actualizar evento (y reasignar usuarios)
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarEvento(@PathVariable Integer id, @RequestBody EventoDTO dto) {
         try {
@@ -99,6 +107,7 @@ public class EventoController {
     }
 
     // Eliminar evento
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarEvento(@PathVariable Integer id) {
         try {
@@ -109,17 +118,20 @@ public class EventoController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/contar-todos")
     public ResponseEntity<Long> contarTodosEventos() {
         long total = eventoService.contarTodosLosEventos();
         return ResponseEntity.ok(total);
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/activos")
     public List<Evento> listarEventosActivos() {
         return eventoService.obtenerEventosActivos();
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/promedio-duracion-horas")
     public Double promedioDuracionHoras() {
         return eventoService.obtenerPromedioDuracionHoras();

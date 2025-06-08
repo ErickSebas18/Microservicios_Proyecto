@@ -5,6 +5,7 @@ import com.proyecto.service.EmailRegistroService;
 import com.proyecto.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class EmailController {
     @Autowired
     private EmailRegistroService emailRegistroService;
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @PostMapping("/enviar")
     public ResponseEntity<?> enviarCorreo(@RequestBody EmailRegistro email) {
         try {
@@ -33,6 +35,7 @@ public class EmailController {
     }
 
     // Obtener todos los registros
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping
     public ResponseEntity<List<EmailRegistro>> getAllEmails() {
         List<EmailRegistro> list = emailRegistroService.getAll();
@@ -40,6 +43,7 @@ public class EmailController {
     }
 
     // Obtener cantidad total
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping("/count")
     public ResponseEntity<Long> getEmailCount() {
         long count = emailRegistroService.count();

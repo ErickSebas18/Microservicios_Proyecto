@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "usuario-service", url = "http://localhost:7070/app-usuarios/usuarios", configuration = FeignConfig.class)
+@FeignClient(
+        name = "usuario-service",
+        url = "${feign.client.usuario-service.url}",
+        configuration = FeignConfig.class
+)
 public interface UsuarioRestClient {
 
     @GetMapping
     List<UsuarioDto> findAll();
 
     @GetMapping("/{id}")
-    UsuarioDto findById(@PathVariable("id")Integer id);
+    UsuarioDto findById(@PathVariable("id") Integer id);
 }

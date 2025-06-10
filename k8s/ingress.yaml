@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: projectask-ingress
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -16,14 +17,14 @@ spec:
     - host: projectask.online
       http:
         paths:
-          - path: /auth
-            pathType: Prefix
+          - path: /()(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: keycloak
                 port:
                   number: 8080
-          - path: /usuarios
+          - path: /api/usuarios(/|$)(.*)
             pathType: Prefix
             backend:
               service:

@@ -16,7 +16,7 @@ spec:
         - name: keycloak
           image: proyectosgestion.azurecr.io/keycloak-custom:latest
           args:
-            - "start"
+            - "start-dev"
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               value: "admin"
@@ -27,9 +27,7 @@ spec:
             - name: KC_HOSTNAME_ADMIN
               value: "projectask.online"
             - name: KC_HOSTNAME_STRICT
-              value: "false"
-            - name: KC_HTTP_RELATIVE_PATH
-              value: "/auth"
+              value: "true"
             - name: KC_PROXY
               value: "edge"
           ports:

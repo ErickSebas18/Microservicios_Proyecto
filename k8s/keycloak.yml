@@ -25,7 +25,7 @@ spec:
             - name: KC_HOSTNAME
               value: "auth.projectask.online"
             - name: KC_HOSTNAME_ADMIN
-              value: "auth.projectask.online"
+              value: "https://auth.projectask.online"
             - name: KC_HOSTNAME_STRICT
               value: "true"
             - name: KC_PROXY

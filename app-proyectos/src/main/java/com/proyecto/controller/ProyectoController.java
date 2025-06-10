@@ -1,12 +1,9 @@
 package com.proyecto.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.proyecto.clients.*;
-import com.proyecto.db.dtos.CrearProyectoDTO;
-import com.proyecto.db.dtos.ProyectoConUsuariosDTO;
-import com.proyecto.db.dtos.ProyectoDTO;
+import com.proyecto.db.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.db.Proyecto;
 import com.proyecto.service.ProyectoService;
-
-import javax.print.attribute.standard.Media;
 
 @RestController
 @RequestMapping("/proyectos")
@@ -34,6 +28,9 @@ public class ProyectoController {
 
     @Autowired
     private ProyectoService proyectoService;
+
+    @Autowired
+    private DocumentoRestClient documentoRestClient;
 
     @PreAuthorize("hasRole('admin_client')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -56,7 +53,7 @@ public class ProyectoController {
         }
     }
 
-    @PreAuthorize("hasRole('admin_client')")
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> obtenerProyectoConUsuarios(@PathVariable Integer id){
         try{
@@ -64,6 +61,24 @@ public class ProyectoController {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
         }
+    }
+
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
+    @GetMapping("/proyectos-por-usuario/{usuarioId}")
+    public List<Integer> obtenerProyectosPorUsuario(@PathVariable Integer usuarioId) {
+        return proyectoService.obtenerIdsProyectosPorUsuario(usuarioId);
+    }
+
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
+    @GetMapping(path = "/mis-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ProyectoDTO>> getProyectosPorUsuario(@PathVariable Integer id) {
+        List<ProyectoDTO> proyectos = proyectoService.listarMisProyectos(id);
+
+        if (proyectos.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
+        }
+
+        return ResponseEntity.ok(proyectos); // 200 OK con la lista de proyectos
     }
 
     @PreAuthorize("hasRole('admin_client')")
@@ -82,13 +97,32 @@ public class ProyectoController {
     public ResponseEntity<?> eliminarProyecto(@PathVariable Integer id){
         try{
             proyectoService.eliminarProyecto(id);
+            this.documentoRestClient.deleteDocumentsOnProject(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
         }
     }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
+    @GetMapping("/contar-todos")
+    public ResponseEntity<Long> contarTodosLosProyectos() {
+        long total = proyectoService.contarTodosLosProyectos();
+        return ResponseEntity.ok(total);
+    }
 
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
+    @GetMapping("/contar-por-estado")
+    public List<ConteoPorEstadoDTO> contarPorEstado() {
+        return proyectoService.contarPorEstado();
+    }
+
+    @PreAuthorize("hasAnyRole('admin_client', 'responsable_client', 'investigador_client')")
+    @GetMapping("/conteo-por-mes")
+    public ResponseEntity<List<ConteoProyectosPorMesDTO>> contarProyectosPorMes() {
+        List<ConteoProyectosPorMesDTO> conteos = proyectoService.contarProyectosPorMes();
+        return ResponseEntity.ok(conteos);
+    }
 //    @Autowired
 //    private UsuarioRestClient usuarioRestClient;
 //
@@ -128,28 +162,7 @@ public class ProyectoController {
 //        }
 //    }
 //
-//    @GetMapping(path = "/responsable-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> findAllProjectsByUser(@PathVariable Integer id) {
-//        try {
-//            return new ResponseEntity<>(this.proyectoService.getAllByUser(id).stream().map(
-//                    proyecto -> {
-//                        var usuario = usuarioRestClient.findById(id);
-//                        ProyectoDTO p = new ProyectoDTO();
-//                        p.setId(proyecto.getId());
-//                        p.setEstado(proyecto.getEstado());
-//                        p.setDescripcion(proyecto.getDescripcion());
-//                        p.setTitulo(proyecto.getTitulo());
-//                        p.setFechaFin(proyecto.getFechaFin());
-//                        p.setFechaInicio(proyecto.getFechaInicio());
-//                        p.setResponsable(usuario.getId());
-//                        p.setResponsableNombre(usuario.getNombre());
-//                        return p;
-//                    }
-//            ).collect(Collectors.toList()), null, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
+
 ///*
 //    @GetMapping(path = "/investigador-proyectos/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    public ResponseEntity<?> findAllProjectsByInvestigator(@PathVariable Integer id) {

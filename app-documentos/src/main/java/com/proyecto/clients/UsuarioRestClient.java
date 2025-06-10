@@ -1,0 +1,23 @@
+package com.proyecto.clients;
+
+import com.proyecto.config.FeignConfig;
+import com.proyecto.db.dto.UsuarioDto;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+
+@FeignClient(
+        name = "usuario-service",
+        url = "${feign.client.usuario-service.url}",
+        configuration = FeignConfig.class
+)
+public interface UsuarioRestClient {
+
+    @GetMapping
+    List<UsuarioDto> findAll();
+
+    @GetMapping("/{id}")
+    UsuarioDto findById(@PathVariable("id") Integer id);
+}

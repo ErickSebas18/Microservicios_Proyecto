@@ -1,7 +1,6 @@
 package com.proyecto.db;
 
 import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 
 @Entity
@@ -11,13 +10,21 @@ public class Documento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String nombre;
-    private String ruta;
-    @Column(name = "fecha_subida")
-    private Timestamp fechaSubida;
+    private String descripcion;
+    private String tipo;
+
+    @Column(name = "usuario_id")
+    private Integer usuarioId;
+
     @Column(name = "proyecto_id")
     private Integer proyectoId;
 
+    @Column(name = "fecha_subida")
+    private Timestamp fechaSubida;
+
+    // Getters y setters
     public Integer getId() {
         return id;
     }
@@ -34,20 +41,28 @@ public class Documento {
         this.nombre = nombre;
     }
 
-    public String getRuta() {
-        return ruta;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public Timestamp getFechaSubida() {
-        return fechaSubida;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setFechaSubida(Timestamp fechaSubida) {
-        this.fechaSubida = fechaSubida;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public Integer getProyectoId() {
@@ -56,5 +71,13 @@ public class Documento {
 
     public void setProyectoId(Integer proyectoId) {
         this.proyectoId = proyectoId;
+    }
+
+    public Timestamp getFechaSubida() {
+        return fechaSubida;
+    }
+
+    public void setFechaSubida(Timestamp fechaSubida) {
+        this.fechaSubida = fechaSubida;
     }
 }

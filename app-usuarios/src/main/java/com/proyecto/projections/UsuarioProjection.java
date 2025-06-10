@@ -12,5 +12,13 @@ public interface UsuarioProjection {
 
     String getRol();
 
-    Timestamp getFechaCreacion();
+    String gettelefono();
+
+    String getciudad();
+
+    String getprovincia();
+
+    Timestamp getultimoAcceso();
+
+    Boolean getactivo();
 }

@@ -1,19 +1,20 @@
 package com.proyecto.service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.proyecto.clients.UsuarioRestClient;
+import com.proyecto.db.Proyecto;
 import com.proyecto.db.ProyectoUsuario;
 import com.proyecto.db.Tarea;
 import com.proyecto.db.dtos.*;
+import com.proyecto.repository.ProyectoRepository;
 import com.proyecto.repository.ProyectoUsuarioRepository;
 import com.proyecto.repository.TareaRepository;
 import com.proyecto.repository.TareaUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.proyecto.db.Proyecto;
-import com.proyecto.repository.ProyectoRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.proyecto.db.dtos.ProyectoConUsuariosDTO.toProyectoConUsuariosDTO;
 import static com.proyecto.db.dtos.ProyectoDTO.toProyectoDTO;
@@ -35,6 +36,9 @@ public class ProyectoService{
 
     @Autowired
     private UsuarioRestClient usuarioRestClient;
+
+    @Autowired
+    private ProyectoUsuarioRepository repository;
 
     //Crear un proyecto
     public ProyectoDTO guardarProyecto(CrearProyectoDTO proyectoDto){
@@ -67,6 +71,23 @@ public class ProyectoService{
     public List<ProyectoDTO> listarProyectos(){
         try{
             return proyectoRepository.findAll().stream().map(ProyectoDTO::toProyectoDTO).collect(Collectors.toList());
+        } catch (Exception e){
+            throw new RuntimeException("Error al listar los proyectos");
+        }
+    }
+
+    // Obtener ids de proyectos segun usuario
+    public List<Integer> obtenerIdsProyectosPorUsuario(Integer usuarioId) {
+        return proyectoUsuarioRepository.findProyectoIdsByUsuarioId(usuarioId);
+    }
+
+    //Obtener todos mis proyectos
+    public List<ProyectoDTO> listarMisProyectos(Integer id){
+        try{
+            List<Proyecto> proyectos = proyectoUsuarioRepository.findProyectosByUsuarioId(id);
+            return proyectos.stream()
+                    .map(ProyectoDTO::toProyectoDTO)
+                    .collect(Collectors.toList());
         } catch (Exception e){
             throw new RuntimeException("Error al listar los proyectos");
         }
@@ -129,6 +150,31 @@ public class ProyectoService{
         } catch (Exception e){
             throw new RuntimeException("Error al eliminar el proyecto");
         }
+    }
+
+    public long contarTodosLosProyectos() {
+        return this.proyectoRepository.count();
+    }
+
+    public List<ConteoPorEstadoDTO> contarPorEstado() {
+        return proyectoRepository.contarProyectosPorEstado()
+                .stream()
+                .map(obj -> new ConteoPorEstadoDTO((String) obj[0], (Long) obj[1]))
+                .collect(Collectors.toList());
+    }
+
+    public List<ConteoProyectosPorMesDTO> contarProyectosPorMes() {
+        List<Object[]> resultados = proyectoRepository.countProyectosPorMes();
+        List<ConteoProyectosPorMesDTO> conteos = new ArrayList<>();
+
+        for (Object[] fila : resultados) {
+            int anio = ((Number) fila[0]).intValue();
+            int mes = ((Number) fila[1]).intValue();
+            long cantidad = ((Number) fila[2]).longValue();
+            conteos.add(new ConteoProyectosPorMesDTO(mes, anio, cantidad));
+        }
+
+        return conteos;
     }
 //    public List<Proyecto> getAllProjects() {
 //        return proyectoRepository.findAllProjectedBy();

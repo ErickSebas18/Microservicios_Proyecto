@@ -5,16 +5,14 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="C:/Gradle/gradle-8.8-bin/gradle-8.8" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../../Gradle/gradle-8.8-bin/gradle-8.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app-comentarios" />
+            <option value="$PROJECT_DIR$/app-agenda" />
+            <option value="$PROJECT_DIR$/app-correo" />
             <option value="$PROJECT_DIR$/app-documentos" />
-            <option value="$PROJECT_DIR$/app-proyectoInvestigadores" />
             <option value="$PROJECT_DIR$/app-proyectos" />
-            <option value="$PROJECT_DIR$/app-tareaInvestigadores" />
-            <option value="$PROJECT_DIR$/app-tareas" />
             <option value="$PROJECT_DIR$/app-usuarios" />
           </set>
         </option>

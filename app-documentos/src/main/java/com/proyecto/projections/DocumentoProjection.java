@@ -7,7 +7,7 @@ public interface DocumentoProjection {
 
     String getNombre();
 
-    String getRuta();
+    String getDescripcion();
 
     Timestamp getFechaSubida();
 

@@ -1,0 +1,130 @@
+/* custom-style.css para update-password */
+
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Libre Baskerville', serif;
+    background: linear-gradient(135deg, #f7e9d7, #fcecd8);
+    color: #3d2b1f;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#kc-container {
+    display: flex;
+    width: 900px;
+    max-width: 95vw;
+    background-color: #ffffffdd;
+    border-radius: 15px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+#kc-logo {
+    background-color: #f9dcc4;
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-right: 2px solid #e6bfa1;
+}
+
+#kc-logo img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+#kc-logo p {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3e2723;
+}
+
+#kc-form-wrapper {
+    flex: 2;
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#kc-form-wrapper h1 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #4e342e;
+}
+
+.kc-description {
+    margin-bottom: 25px;
+    color: #5d4037;
+    font-size: 15px;
+}
+
+.kc-error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.kc-input-group {
+    margin-bottom: 20px;
+}
+
+.kc-input-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #4e342e;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.kc-input-group input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fffaf4;
+    transition: border-color 0.3s;
+}
+
+.kc-input-group input:focus {
+    outline: none;
+    border-color: #a1887f;
+}
+
+.kc-button-group {
+    margin-top: 20px;
+}
+
+.kc-button-group button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #8d6e63;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.kc-button-group button:hover {
+    background-color: #6d4c41;
+}

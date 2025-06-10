@@ -28,21 +28,34 @@ public class KeycloakServiceImpl implements IKeycloakService{
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private KeycloakProvider keycloakProvider;
+
     @Override
     public List<UserRepresentation> findAllUsers() {
-        return KeycloakProvider.getRealmResource().users().list();
+        return keycloakProvider.getRealmResource().users().list();
     }
 
     @Override
     public UserRepresentation searchUserByEmail(String mail) {
-        return KeycloakProvider.getRealmResource().users().searchByEmail(mail, true).getFirst();
+        return keycloakProvider.getRealmResource().users().searchByEmail(mail, true).getFirst();
     }
 
     @Override
     public String createUser(@NonNull UsuarioKeycloakDto usuarioDTO) {
         try {
-            UsersResource userResource = KeycloakProvider.getUsersResource();
+            UsersResource userResource = keycloakProvider.getUsersResource();
 
+            // Verificar si el correo ya existe
+            List<UserRepresentation> existingUsers = userResource.search(usuarioDTO.getEmail(), true);
+            boolean emailExists = existingUsers.stream()
+                    .anyMatch(user -> user.getEmail() != null && user.getEmail().equalsIgnoreCase(usuarioDTO.getEmail()));
+
+            if (emailExists) {
+                return "El correo electrónico ya está registrado en Keycloak.";
+            }
+
+            // Crear representación del usuario en Keycloak
             UserRepresentation userRepresentation = new UserRepresentation();
             userRepresentation.setUsername(usuarioDTO.getUsername());
             userRepresentation.setFirstName(usuarioDTO.getFirstName());
@@ -51,8 +64,8 @@ public class KeycloakServiceImpl implements IKeycloakService{
             userRepresentation.setEmailVerified(true);
             userRepresentation.setEnabled(true);
 
+            // Crear el usuario en Keycloak
             Response response = userResource.create(userRepresentation);
-
             if (response.getStatus() != 201) {
                 return "Error al crear usuario en Keycloak: " + response.getStatus();
             }
@@ -60,26 +73,34 @@ public class KeycloakServiceImpl implements IKeycloakService{
             String path = response.getLocation().getPath();
             String userId = path.substring(path.lastIndexOf("/") + 1);
 
+            // Establecer contraseña
             CredentialRepresentation passwordCred = new CredentialRepresentation();
             passwordCred.setTemporary(true);
             passwordCred.setType("password");
             passwordCred.setValue(usuarioDTO.getPassword());
-
             userResource.get(userId).resetPassword(passwordCred);
 
-            // Asignar Rol al Usuario en Keycloak
-            RealmResource realmResource = KeycloakProvider.getRealmResource();
-            RoleRepresentation roleRepresentation = realmResource.roles().get(usuarioDTO.getRol()).toRepresentation();
-            userResource.get(userId).roles().realmLevel().add(Collections.singletonList(roleRepresentation));
+            // Asignar Rol
+            RealmResource realmResource = keycloakProvider.getRealmResource();
+            RoleRepresentation roleRepresentation = realmResource.roles()
+                    .get(usuarioDTO.getRol()).toRepresentation();
+            userResource.get(userId).roles().realmLevel()
+                    .add(Collections.singletonList(roleRepresentation));
 
-            userResource.get(userId).resetPassword(passwordCred);
+            // Guardar en base de datos local
             Usuario usuario = new Usuario();
+            usuario.setId(null);
             usuario.setNombre(usuarioDTO.getFirstName() + " " + usuarioDTO.getLastName());
             usuario.setCorreo(usuarioDTO.getEmail());
             usuario.setRol(usuarioDTO.getRol());
             usuario.setFechaCreacion(Timestamp.from(Instant.now()));
+            usuario.setTelefono(usuarioDTO.getTelefono());
+            usuario.setCiudad(usuarioDTO.getCiudad());
+            usuario.setProvincia(usuarioDTO.getProvincia());
+            usuario.setUltimoAcceso(null); // Se puede actualizar luego con el login real
+            usuario.setActivo(true);
 
-            usuarioRepository.save(usuario);
+            this.usuarioRepository.save(usuario);
 
             return userId;
 
@@ -88,16 +109,30 @@ public class KeycloakServiceImpl implements IKeycloakService{
         }
     }
 
+
+
     @Override
     public void deleteUser(String userId) {
 
-        UsersResource usersResource = KeycloakProvider.getUsersResource();
+        UsersResource usersResource = keycloakProvider.getUsersResource();
         usersResource.get(userId).remove();
 
     }
-
     @Override
     public void updateUser(String userId, @NonNull UsuarioKeycloakDto usuarioDTO) {
+        UsersResource usersResource = keycloakProvider.getUsersResource();
+        UserResource userResource = usersResource.get(userId);
+
+        // Verificar si el email está siendo usado por otro usuario
+        List<UserRepresentation> existingUsers = usersResource.search(usuarioDTO.getEmail(), true);
+        for (UserRepresentation existingUser : existingUsers) {
+            if (!existingUser.getId().equals(userId) &&
+                    usuarioDTO.getEmail().equalsIgnoreCase(existingUser.getEmail())) {
+                throw new IllegalArgumentException("El correo electrónico ya está siendo utilizado por otro usuario.");
+            }
+        }
+
+        // Actualizar la información del usuario
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(usuarioDTO.getUsername());
         userRepresentation.setFirstName(usuarioDTO.getFirstName());
@@ -108,28 +143,24 @@ public class KeycloakServiceImpl implements IKeycloakService{
 
         System.out.println("Modificando Keycloak");
 
-        UsersResource usersResource = KeycloakProvider.getUsersResource();
-        usersResource.get(userId).update(userRepresentation);
+        userResource.update(userRepresentation);
 
-        RealmResource realmResource = KeycloakProvider.getRealmResource();
+        // Actualizar rol
+        RealmResource realmResource = keycloakProvider.getRealmResource();
         RoleRepresentation newRole = realmResource.roles().get(usuarioDTO.getRol()).toRepresentation();
 
-        // Eliminar el rol anterior si es necesario
-        UserResource userResource = usersResource.get(userId);
+        // Eliminar roles actuales, excepto el por defecto
         List<RoleRepresentation> currentRoles = userResource.roles().realmLevel().listAll();
         for (RoleRepresentation role : currentRoles) {
-
-            if (!role.getName().equals("default-roles-spring-boot-realm")) {
+            if (!role.getName().startsWith("default-roles-")) {
                 userResource.roles().realmLevel().remove(Collections.singletonList(role));
                 System.out.println("Rol " + role.getName() + " eliminado.");
             }
         }
 
-        // Asignar el rol actualizado
-        userResource.roles().realmLevel().add(Collections.singletonList(newRole));
-        System.out.println("Rol actualizado: " + usuarioDTO.getRol());
-
         // Asignar el nuevo rol
         userResource.roles().realmLevel().add(Collections.singletonList(newRole));
+        System.out.println("Rol actualizado: " + usuarioDTO.getRol());
     }
+
 }

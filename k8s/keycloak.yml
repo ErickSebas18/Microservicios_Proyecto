@@ -23,7 +23,7 @@ spec:
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
               value: "admin"
             - name: KC_HOSTNAME
-              value: "auth.projectask.online"
+              value: "https://auth.projectask.online"
             - name: KC_HOSTNAME_ADMIN
               value: "https://auth.projectask.online"
             - name: KC_HOSTNAME_STRICT

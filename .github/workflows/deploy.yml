@@ -25,12 +25,12 @@ jobs:
         run: ./gradlew build -x test
 
       - name: 🔹 Debug temporal del secreto 
-        run: echo "${{ secrets.AZURE_CREDENTIALS }}"
+        run: echo "${{ secrets.CREDENTIALS }}"
 
       - name: 🔹 Login en Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.CREDENTIALS }}
           
       - name: 🔹 Login en Azure Container Registry (ACR)
         run: az acr login --name proyectosgestion

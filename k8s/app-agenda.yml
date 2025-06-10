@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-agenda-deployment
+  labels:
+    app: app-agenda
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-agenda
+  template:
+    metadata:
+      labels:
+        app: app-agenda
+    spec:
+      containers:
+        - name: app-agenda
+          image:  proyectosgestion.azurecr.io/app-agenda
+          ports:
+            - containerPort: 9094
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-agenda-service
+spec:
+  selector:
+    app: app-agenda
+  ports:
+    - protocol: TCP
+      port: 9094
+      targetPort: 9094
+  type: ClusterIP

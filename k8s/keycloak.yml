@@ -15,12 +15,23 @@ spec:
       containers:
         - name: keycloak
           image: proyectosgestion.azurecr.io/keycloak-custom:latest
-          args: ["start-dev", "--hostname=projectask.online", "--hostname-path=/auth"]
+          args:
+            - "start"
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               value: "admin"
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
               value: "admin"
+            - name: KC_HOSTNAME
+              value: "projectask.online"
+            - name: KC_HOSTNAME_ADMIN
+              value: "projectask.online"
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/auth"
+            - name: KC_PROXY
+              value: "edge"
           ports:
             - containerPort: 8080
           volumeMounts:

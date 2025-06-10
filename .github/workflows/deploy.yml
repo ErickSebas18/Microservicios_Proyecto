@@ -1,0 +1,62 @@
+name: Deploy to Azure AKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔹 Checkout del código
+        uses: actions/checkout@v3
+
+      - name: 🔹 Configurar JDK (Zulu OpenJDK)
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'  # Usar Java 21
+          distribution: 'zulu'  # Usar Zulu OpenJDK, compatible con Java 21
+
+      - name: 🔹 Dar permisos de ejecución a gradlew
+        run: chmod +x ./gradlew  # Agregar permisos de ejecución a gradlew
+
+      - name: 🔹 Construir la aplicación con Gradle
+        run: ./gradlew build -x test
+
+      - name: 🔹 Login en Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🔹 Login en Azure Container Registry (ACR)
+        run: az acr login --name proyectosgestion
+
+      - name: 🔹 Listar archivos de los directorios app-*
+        run: |
+          for dir in app-*; do
+            echo "Archivos en $dir:"
+            ls -al $dir
+          done
+
+      - name: 🔹 Construir y subir imágenes Docker de microservicios
+        run: |
+          for dir in app-*; do
+            IMAGE_NAME="proyectosgestion.azurecr.io/$dir:latest"
+            echo "Building and pushing $IMAGE_NAME"
+            docker build -t $IMAGE_NAME ./$dir
+            docker push $IMAGE_NAME
+          done
+
+      - name: 🔹 Construir y subir imagen personalizada de Keycloak
+        run: |
+          KEYCLOAK_IMAGE="proyectosgestion.azurecr.io/keycloak-custom:latest"
+          echo "Building and pushing $KEYCLOAK_IMAGE"
+          docker build -t $KEYCLOAK_IMAGE ./keycloak-custom
+          docker push $KEYCLOAK_IMAGE
+
+      - name: 🔹 Configurar credenciales de Kubernetes
+        run: az aks get-credentials --resource-group proyectoIntegrador --name proyectoCluster
+
+      - name: 🔹 Aplicar configuración en Kubernetes
+        run: kubectl apply -f k8s/

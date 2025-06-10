@@ -15,7 +15,7 @@ spec:
       containers:
         - name: keycloak
           image: proyectosgestion.azurecr.io/keycloak-custom:latest
-          args: ["start-dev"]
+          args: ["start-dev", "--hostname=projectask.online", "--hostname-path=/auth"]
           env:
             - name: KC_BOOTSTRAP_ADMIN_USERNAME
               value: "admin"

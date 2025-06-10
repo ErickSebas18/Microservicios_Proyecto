@@ -41,10 +41,6 @@ dependencies {
     implementation("org.keycloak:keycloak-spring-boot-starter:22.0.5") {
         exclude(group = "org.jboss.resteasy")
     }
-    implementation("org.springframework.cloud:spring-cloud-starter-consul-discovery:4.2.0")
-    implementation("io.vertx:vertx-consul-client:4.5.13")
-    implementation("org.springframework.boot:spring-boot-starter-actuator:3.4.3")
-
 }
 
 tasks.test {

@@ -4,26 +4,31 @@ metadata:
   name: projectask-ingress
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - projectask.online
-      secretName: projectask-online-tls
+        - auth.projectask.online
+        - api.projectask.online
+      secretName: projectask-tls
   rules:
-    - host: projectask.online
+    - host: auth.projectask.online
       http:
         paths:
-          - path: /auth(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: keycloak
                 port:
                   number: 8080
-          - path: /api/usuarios(/|$)(.*)
-            pathType: ImplementationSpecific
+    - host: api.projectask.online
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: app-usuarios-service

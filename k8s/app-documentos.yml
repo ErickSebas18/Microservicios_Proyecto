@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app-documentos
-          image:  proyectosgestion.azurecr.io/app-documentos
+          image:  proyectosgestion.azurecr.io/app-documentos:latest
           ports:
             - containerPort: 9092
 ---

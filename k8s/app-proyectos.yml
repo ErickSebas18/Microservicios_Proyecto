@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app-proyectos
-          image:  proyectosgestion.azurecr.io/app-proyectos
+          image:  proyectosgestion.azurecr.io/app-proyectos:latest
           ports:
             - containerPort: 9091
 ---

@@ -4,12 +4,6 @@ metadata:
   name: projectask-ingress
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      location ^~ /.well-known/acme-challenge/ {
-        # No redirigir esta ruta a HTTPS
-        proxy_pass http://$host$request_uri;
-        allow all;
-      }
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx

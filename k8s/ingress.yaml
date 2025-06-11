@@ -3,16 +3,13 @@ kind: Ingress
 metadata:
   name: projectask-ingress
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
         - auth.projectask.online
-        - api.projectask.online
-      secretName: projectask-tls
+      secretName: projectask-tls-keycloak
   rules:
     - host: auth.projectask.online
       http:

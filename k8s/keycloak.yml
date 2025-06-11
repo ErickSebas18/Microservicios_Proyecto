@@ -18,18 +18,10 @@ spec:
           args:
             - "start-dev"
           env:
-            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+            - name: KEYCLOAK_ADMIN
               value: "admin"
-            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+            - name: KEYCLOAK_ADMIN_PASSWORD
               value: "admin"
-            - name: KC_HOSTNAME
-              value: "https://app.projectask.online/auth"
-            - name: KC_HOSTNAME_ADMIN
-              value: "https://app.projectask.online/auth"
-            - name: KC_HOSTNAME_STRICT
-              value: "true"
-            - name: KC_PROXY
-              value: "edge"
           ports:
             - containerPort: 8080
           volumeMounts:
@@ -47,8 +39,8 @@ metadata:
   name: keycloak
 spec:
   type: LoadBalancer
+  selector:
+    app: keycloak
   ports:
     - port: 8080
       targetPort: 8080
-  selector:
-    app: keycloak

@@ -27,19 +27,10 @@ jobs:
       - name: 🔹 Login en Azure
         uses: azure/login@v1
         with:
-          creds: |
-            {
-            "clientId": "377f1230-b3fb-405b-ba4a-520f4cf18701",
-            "clientSecret": "YSr8Q~VW0TifIdi6pvvaAUnSvK6uhV6QHzgw5cgN",
-            "subscriptionId": "2ace150a-864c-437c-bb7d-ff6483a6a32b",
-            "tenantId": "8ca52e2b-1d20-4274-9a13-bd76eccb81d1",
-            "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
-            "resourceManagerEndpointUrl": "https://management.azure.com/",
-            "activeDirectoryGraphResourceId": "https://graph.windows.net/",
-            "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
-            "galleryEndpointUrl": "https://gallery.azure.com/",
-            "managementEndpointUrl": "https://management.core.windows.net/"
-            }
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-secret:: ${{ secrets.AZURE_CLIENT_SECRET }}
           
       - name: 🔹 Login en Azure Container Registry (ACR)
         run: az acr login --name proyectosgestion

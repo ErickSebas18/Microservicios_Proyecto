@@ -27,13 +27,10 @@ jobs:
       - name: 🔹 Login en Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          client-secret:: ${{ secrets.AZURE_CLIENT_SECRET }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
           
       - name: 🔹 Login en Azure Container Registry (ACR)
-        run: az acr login --name proyectosgestion
+        run: az acr login --name proyectoIntegrador
 
       - name: 🔹 Listar archivos de los directorios app-*
         run: |
@@ -45,7 +42,7 @@ jobs:
       - name: 🔹 Construir y subir imágenes Docker de microservicios
         run: |
           for dir in app-*; do
-            IMAGE_NAME="proyectosgestion.azurecr.io/$dir:latest"
+            IMAGE_NAME="proyectointegrador.azurecr.io/$dir:latest"
             echo "Building and pushing $IMAGE_NAME"
             docker build -t $IMAGE_NAME ./$dir
             docker push $IMAGE_NAME
@@ -53,13 +50,13 @@ jobs:
 
       - name: 🔹 Construir y subir imagen personalizada de Keycloak
         run: |
-          KEYCLOAK_IMAGE="proyectosgestion.azurecr.io/keycloak-custom:latest"
+          KEYCLOAK_IMAGE="proyectointegrador.azurecr.io/keycloak-custom:latest"
           echo "Building and pushing $KEYCLOAK_IMAGE"
           docker build -t $KEYCLOAK_IMAGE ./keycloak-custom
           docker push $KEYCLOAK_IMAGE
 
       - name: 🔹 Configurar credenciales de Kubernetes
-        run: az aks get-credentials --resource-group proyectoIntegrador --name proyectoCluster
+        run: az aks get-credentials --resource-group ProyectoIntegrador --name proyectoCluster
 
       - name: 🔹 Aplicar configuración en Kubernetes
         run: kubectl apply -f k8s/

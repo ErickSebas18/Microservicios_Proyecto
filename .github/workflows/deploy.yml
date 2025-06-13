@@ -27,7 +27,20 @@ jobs:
       - name: 🔹 Login en Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: |
+            {
+              "clientId": "1351cb45-9c18-4f2e-8032-fd6b5d23cee6",
+              "clientSecret": "85o8Q~RPRcGpYAEBdHKemlfv7RpEzRo_~UcQpcTK",
+              "subscriptionId": "76e4ef62-5d27-415d-bded-a76ee55d19bd",
+              "tenantId": "8ca52e2b-1d20-4274-9a13-bd76eccb81d1",
+              "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
+              "resourceManagerEndpointUrl": "https://management.azure.com/",
+              "activeDirectoryGraphResourceId": "https://graph.windows.net/",
+              "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+              "galleryEndpointUrl": "https://gallery.azure.com/",
+              "managementEndpointUrl": "https://management.core.windows.net/"
+            }
+
           
       - name: 🔹 Login en Azure Container Registry (ACR)
         run: az acr login --name proyectoIntegrador

@@ -15,6 +15,7 @@ spec:
       containers:
         - name: keycloak
           image: proyectoint.azurecr.io/keycloak-custom:latest
+          imagePullPolicy: always
           args:
             - "start-dev"
           env:
@@ -39,7 +40,7 @@ metadata:
   name: keycloak
 spec:
   type: LoadBalancer
-  loadBalancerIP: 52.137.187.100
+  loadBalancerIP: 52.225.81.116
   selector:
     app: keycloak
   ports:

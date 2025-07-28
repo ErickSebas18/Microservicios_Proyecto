@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: keycloak
-          image: proyectosgestion.azurecr.io/keycloak-custom:latest
+          image: proyectointegrador1.azurecr.io/keycloak-custom:latest
           args:
             - "start-dev"
           env:

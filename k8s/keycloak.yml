@@ -39,6 +39,7 @@ metadata:
   name: keycloak
 spec:
   type: LoadBalancer
+  loadBalancerIP: 52.137.187.100
   selector:
     app: keycloak
   ports:

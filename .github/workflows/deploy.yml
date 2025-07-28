@@ -15,11 +15,11 @@ jobs:
       - name: 🔹 Configurar JDK (Zulu OpenJDK)
         uses: actions/setup-java@v2
         with:
-          java-version: '21'
-          distribution: 'zulu'
+          java-version: '21' #Usar Java 21
+          distribution: 'zulu'  # Usar Zulu OpenJDK, compatible con Java 21
 
       - name: 🔹 Dar permisos de ejecución a gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x ./gradlew  # Agregar permisos de ejecución a gradlew
 
       - name: 🔹 Construir la aplicación con Gradle
         run: ./gradlew build -x test
@@ -27,13 +27,10 @@ jobs:
       - name: 🔹 Login en Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{secrets.AZURE_CREDENTIALS}}
           
       - name: 🔹 Login en Azure Container Registry (ACR)
-        run: az acr login --name proyectoint
-
-      - name: 🔹 Habilitar Docker Buildx
-        run: docker buildx create --use
+        run: az acr login --name projectint
 
       - name: 🔹 Listar archivos de los directorios app-*
         run: |
@@ -42,22 +39,24 @@ jobs:
             ls -al $dir
           done
 
-      - name: 🔹 Construir y subir imágenes Docker de microservicios (ARM64)
+      - name: 🔹 Construir y subir imágenes Docker de microservicios
         run: |
           for dir in app-*; do
-            IMAGE_NAME="proyectoint.azurecr.io/$dir:latest"
-            echo "Building and pushing $IMAGE_NAME for ARM64"
-            docker buildx build --platform linux/arm64 -t $IMAGE_NAME ./$dir --push
+            IMAGE_NAME="projectint.azurecr.io/$dir:latest"
+            echo "Building and pushing $IMAGE_NAME"
+            docker build -t $IMAGE_NAME ./$dir
+            docker push $IMAGE_NAME
           done
 
-      - name: 🔹 Construir y subir imagen personalizada de Keycloak (ARM64)
+      - name: 🔹 Construir y subir imagen personalizada de Keycloak
         run: |
-          KEYCLOAK_IMAGE="proyectoint.azurecr.io/keycloak-custom:latest"
-          echo "Building and pushing $KEYCLOAK_IMAGE for ARM64"
-          docker buildx build --platform linux/arm64 -t $KEYCLOAK_IMAGE ./keycloak-custom --push
+          KEYCLOAK_IMAGE="projectint.azurecr.io/keycloak-custom:latest"
+          echo "Building and pushing $KEYCLOAK_IMAGE"
+          docker build -t $KEYCLOAK_IMAGE ./keycloak-custom
+          docker push $KEYCLOAK_IMAGE
 
       - name: 🔹 Configurar credenciales de Kubernetes
-        run: az aks get-credentials --resource-group ProyectoIntegrador --name clusterProyecto
+        run: az aks get-credentials --resource-group ProyectoIntegrador --name proyectoCluster
 
       - name: 🔹 Aplicar configuración en Kubernetes
         run: kubectl apply -f k8s/

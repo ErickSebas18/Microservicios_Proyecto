@@ -15,7 +15,7 @@ spec:
       containers:
         - name: keycloak
           image: proyectoint.azurecr.io/keycloak-custom:latest
-          imagePullPolicy: always
+          imagePullPolicy: Always
           args:
             - "start-dev"
           env:

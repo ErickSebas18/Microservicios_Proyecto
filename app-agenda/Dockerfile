@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre-jammy
+FROM --platform=linux/arm64 eclipse-temurin:21-jre-jammy
 
 # Crea el directorio /app
 RUN mkdir /app

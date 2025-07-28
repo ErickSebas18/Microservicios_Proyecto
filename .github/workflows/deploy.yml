@@ -30,7 +30,7 @@ jobs:
           creds: ${{secrets.AZURE_CREDENTIALS}}
           
       - name: 🔹 Login en Azure Container Registry (ACR)
-        run: az acr login --name proyectointegrador1
+        run: az acr login --name proyectoint
 
       - name: 🔹 Listar archivos de los directorios app-*
         run: |
@@ -42,7 +42,7 @@ jobs:
       - name: 🔹 Construir y subir imágenes Docker de microservicios
         run: |
           for dir in app-*; do
-            IMAGE_NAME="proyectointegrador1.azurecr.io/$dir:latest"
+            IMAGE_NAME="proyectoint.azurecr.io/$dir:latest"
             echo "Building and pushing $IMAGE_NAME"
             docker build -t $IMAGE_NAME ./$dir
             docker push $IMAGE_NAME
@@ -50,7 +50,7 @@ jobs:
 
       - name: 🔹 Construir y subir imagen personalizada de Keycloak
         run: |
-          KEYCLOAK_IMAGE="proyectointegrador1.azurecr.io/keycloak-custom:latest"
+          KEYCLOAK_IMAGE="proyectoint.azurecr.io/keycloak-custom:latest"
           echo "Building and pushing $KEYCLOAK_IMAGE"
           docker build -t $KEYCLOAK_IMAGE ./keycloak-custom
           docker push $KEYCLOAK_IMAGE

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app-correo
-          image:  proyectointegrador1.azurecr.io/app-correo:latest
+          image:  proyectoint.azurecr.io/app-correo:latest
           ports:
             - containerPort: 9094
 ---

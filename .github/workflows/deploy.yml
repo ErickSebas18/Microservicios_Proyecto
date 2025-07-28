@@ -27,21 +27,10 @@ jobs:
       - name: 🔹 Login en Azure
         uses: azure/login@v1
         with:
-          creds: |
-            {
-                "clientId": "1351cb45-9c18-4f2e-8032-fd6b5d23cee6",
-                "clientSecret": "5A08Q~Vrzqo_rtQTwjzCmIU86ZGFA-l9SOCi9cA4",
-                "subscriptionId": "76e4ef62-5d27-415d-bded-a76ee55d19bd",
-                "tenantId": "8ca52e2b-1d20-4274-9a13-bd76eccb81d1",
-                "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
-                "resourceManagerEndpointUrl": "https://management.azure.com/",
-                "activeDirectoryGraphResourceId": "https://graph.windows.net/",
-                "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
-                "galleryEndpointUrl": "https://gallery.azure.com/",
-                "managementEndpointUrl": "https://management.core.windows.net/"
-            }         
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+          
       - name: 🔹 Login en Azure Container Registry (ACR)
-        run: az acr login --name proyectoIntegrador
+        run: az acr login --name ProyectoIntegrador
 
       - name: 🔹 Listar archivos de los directorios app-*
         run: |
@@ -53,7 +42,7 @@ jobs:
       - name: 🔹 Construir y subir imágenes Docker de microservicios
         run: |
           for dir in app-*; do
-            IMAGE_NAME="proyectointegrador.azurecr.io/$dir:latest"
+            IMAGE_NAME="proyectointegrador1.azurecr.io/$dir:latest"
             echo "Building and pushing $IMAGE_NAME"
             docker build -t $IMAGE_NAME ./$dir
             docker push $IMAGE_NAME
@@ -61,7 +50,7 @@ jobs:
 
       - name: 🔹 Construir y subir imagen personalizada de Keycloak
         run: |
-          KEYCLOAK_IMAGE="proyectointegrador.azurecr.io/keycloak-custom:latest"
+          KEYCLOAK_IMAGE="proyectointegrador1.azurecr.io/keycloak-custom:latest"
           echo "Building and pushing $KEYCLOAK_IMAGE"
           docker build -t $KEYCLOAK_IMAGE ./keycloak-custom
           docker push $KEYCLOAK_IMAGE

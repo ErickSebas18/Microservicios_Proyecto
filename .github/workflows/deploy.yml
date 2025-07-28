@@ -15,7 +15,7 @@ jobs:
       - name: 🔹 Configurar JDK (Zulu OpenJDK)
         uses: actions/setup-java@v2
         with:
-          java-version: '21'  # Usar Java 21
+          java-version: '21' 
           distribution: 'zulu'  # Usar Zulu OpenJDK, compatible con Java 21
 
       - name: 🔹 Dar permisos de ejecución a gradlew

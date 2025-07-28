@@ -56,7 +56,7 @@ jobs:
           docker push $KEYCLOAK_IMAGE
 
       - name: 🔹 Configurar credenciales de Kubernetes
-        run: az aks get-credentials --resource-group ProyectoIntegrador --name proyectoCluster
+        run: az aks get-credentials --resource-group ProyectoIntegrador --name clusterProyecto
 
       - name: 🔹 Aplicar configuración en Kubernetes
         run: kubectl apply -f k8s/

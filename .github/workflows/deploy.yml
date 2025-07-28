@@ -30,7 +30,7 @@ jobs:
           creds: ${{secrets.AZURE_CREDENTIALS}}
           
       - name: 🔹 Login en Azure Container Registry (ACR)
-        run: az acr login --name ProyectoIntegrador
+        run: az acr login --name proyectointegrador1
 
       - name: 🔹 Listar archivos de los directorios app-*
         run: |

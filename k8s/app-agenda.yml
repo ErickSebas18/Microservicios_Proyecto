@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app-agenda
-          image:  proyectoint.azurecr.io/app-agenda:latest
+          image:  projectint.azurecr.io/app-agenda:latest
           ports:
             - containerPort: 9094
 ---

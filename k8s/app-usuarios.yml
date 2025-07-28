@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app-usuarios
-          image:  proyectoint.azurecr.io/app-usuarios:latest
+          image:  projectint.azurecr.io/app-usuarios:latest
           ports:
             - containerPort: 9090
 ---

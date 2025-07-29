@@ -60,7 +60,7 @@ kind: Service
 metadata:
   name: keycloak
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_ProyectoIntegrador_proyectoCluster_westus
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_ProyectoIntegrador_clusterProyecto_westus
 spec:
   type: LoadBalancer
   loadBalancerIP: 13.64.75.47

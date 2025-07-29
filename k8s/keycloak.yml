@@ -12,6 +12,8 @@ spec:
       labels:
         app: keycloak
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: keycloak
           image: projectint.azurecr.io/keycloak-custom:latest
@@ -20,7 +22,6 @@ spec:
             - "--db-url=jdbc:postgresql://proyectointegrador1.postgres.database.azure.com/proyecto_dnpt"
             - "--db-username=proyectoadmin"
             - "--db-password=Admin123"
-            - "--optimized"
           env:
             - name: KEYCLOAK_ADMIN
               value: "admin"
@@ -35,6 +36,8 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "1"
+          securityContext:
+            runAsUser: 0
 ---
 apiVersion: v1
 kind: Service

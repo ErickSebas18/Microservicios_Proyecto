@@ -12,11 +12,13 @@ spec:
       labels:
         app: keycloak
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: keycloak
           image: projectint.azurecr.io/keycloak-custom:latest
           args:
-            - "start-dev"
+            - "start"
           env:
             - name: KEYCLOAK_ADMIN
               value: "admin"
@@ -31,6 +33,8 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "1"
+          securityContext:
+            runAsUser: 0
           volumeMounts:
             - name: keycloak-storage
               mountPath: /opt/keycloak/data
@@ -38,9 +42,7 @@ spec:
         - name: keycloak-storage
           persistentVolumeClaim:
             claimName: keycloak-pvc
-
 ---
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -52,15 +54,13 @@ spec:
     requests:
       storage: 5Gi
   storageClassName: default
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: keycloak
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_ProyectoIntegrador_clusterProyecto_westus
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_ProyectoIntegrador_proyectoCluster_westus
 spec:
   type: LoadBalancer
   loadBalancerIP: 13.64.75.47

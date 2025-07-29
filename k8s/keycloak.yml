@@ -24,12 +24,34 @@ spec:
               value: "admin"
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
           volumeMounts:
             - name: keycloak-storage
               mountPath: /opt/keycloak/data
       volumes:
         - name: keycloak-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: keycloak-pvc
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: default  # Cambia según tu StorageClass disponible
 
 ---
 

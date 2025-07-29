@@ -17,6 +17,7 @@ spec:
       containers:
         - name: app-correo
           image:  projectint.azurecr.io/app-correo:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9094
 ---

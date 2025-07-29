@@ -17,6 +17,7 @@ spec:
       containers:
         - name: app-usuarios
           image:  projectint.azurecr.io/app-usuarios:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9090
 ---

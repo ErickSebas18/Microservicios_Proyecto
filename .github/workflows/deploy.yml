@@ -61,5 +61,9 @@ jobs:
       - name: 🔹 Aplicar configuración en Kubernetes
         run: kubectl apply -f k8s/
 
-      - name: 🔹 Forzar redeploy de los pods 
-        run: kubectl rollout restart deployment --all
+      - name: 🔹 Forzar redeploy de los pods
+        run: |
+          for dep in $(kubectl get deploy -o name); do
+            kubectl rollout restart $dep
+          done
+

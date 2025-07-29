@@ -51,7 +51,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: default  # Cambia según tu StorageClass disponible
+  storageClassName: default
 
 ---
 
@@ -63,7 +63,7 @@ metadata:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_ProyectoIntegrador_proyectoCluster_westus
 spec:
   type: LoadBalancer
-  loadBalancerIP: 40.112.239.117
+  loadBalancerIP: 13.64.75.47
   selector:
     app: keycloak
   ports:

@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: multi-host-ingress
+  name: frontend-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -10,8 +10,7 @@ spec:
   tls:
     - hosts:
         - app.projectask.online
-        - auth.projectask.online
-      secretName: multi-host-tls
+      secretName: frontend-tls
   rules:
     - host: app.projectask.online
       http:
@@ -23,13 +22,3 @@ spec:
                 name: app-vue
                 port:
                   number: 80
-    - host: auth.projectask.online
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: keycloak
-                port:
-                  number: 8080

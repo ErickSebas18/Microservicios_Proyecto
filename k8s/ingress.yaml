@@ -1,31 +1,35 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: projectask-ingress
+  name: multi-host-ingress
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
-  ingressClassName: nginx
   tls:
     - hosts:
         - app.projectask.online
-      secretName: app-projectask-online-tls
+        - auth.projectask.online
+      secretName: multi-host-tls
   rules:
     - host: app.projectask.online
       http:
         paths:
-          - path: /auth
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app-vue
+                port:
+                  number: 80
+    - host: auth.projectask.online
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: keycloak
                 port:
                   number: 8080
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: app-usuarios-service
-                port:
-                  number: 9090

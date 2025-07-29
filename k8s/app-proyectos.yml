@@ -17,6 +17,7 @@ spec:
       containers:
         - name: app-proyectos
           image:  projectint.azurecr.io/app-proyectos:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9091
 ---

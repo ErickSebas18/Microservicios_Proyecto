@@ -17,6 +17,7 @@ spec:
       containers:
         - name: app-agenda
           image:  projectint.azurecr.io/app-agenda:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9094
 ---

@@ -17,6 +17,7 @@ spec:
       containers:
         - name: app-documentos
           image:  projectint.azurecr.io/app-documentos:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9092
 ---

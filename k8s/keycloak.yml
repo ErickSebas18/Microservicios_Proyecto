@@ -15,6 +15,7 @@ spec:
       containers:
         - name: keycloak
           image: projectint.azurecr.io/keycloak-custom:latest
+          imagePullPolicy: Always
           args:
             - "start-dev"
           env:
@@ -24,6 +25,13 @@ spec:
               value: "admin"
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
           volumeMounts:
             - name: keycloak-storage
               mountPath: /opt/keycloak/data
@@ -37,7 +45,7 @@ kind: Service
 metadata:
   name: keycloak
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_ProyectoIntegrador_proyectoCluster_westus
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_ProyectoIntegrador_clusterProyecto_westus
 spec:
   type: LoadBalancer
   loadBalancerIP: 13.64.75.47

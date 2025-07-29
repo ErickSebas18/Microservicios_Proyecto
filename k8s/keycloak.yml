@@ -17,10 +17,10 @@ spec:
           image: projectint.azurecr.io/keycloak-custom:latest
           args:
             - "start"
-            - "--db=postgres"
             - "--db-url=jdbc:postgresql://proyectointegrador1.postgres.database.azure.com/proyecto_dnpt"
             - "--db-username=proyectoadmin"
             - "--db-password=Admin123"
+            - "--optimized"
           env:
             - name: KEYCLOAK_ADMIN
               value: "admin"

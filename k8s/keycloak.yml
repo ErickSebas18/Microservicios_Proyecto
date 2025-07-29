@@ -12,13 +12,15 @@ spec:
       labels:
         app: keycloak
     spec:
-      securityContext:
-        fsGroup: 1000
       containers:
         - name: keycloak
           image: projectint.azurecr.io/keycloak-custom:latest
           args:
             - "start"
+            - "--db=postgres"
+            - "--db-url=jdbc:postgresql://proyectointegrador1.postgres.database.azure.com/proyecto_dnpt"
+            - "--db-username=proyectoadmin"
+            - "--db-password=Admin123"
           env:
             - name: KEYCLOAK_ADMIN
               value: "admin"
@@ -33,27 +35,6 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "1"
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-            - name: keycloak-storage
-              mountPath: /opt/keycloak/data
-      volumes:
-        - name: keycloak-storage
-          persistentVolumeClaim:
-            claimName: keycloak-pvc
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: keycloak-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: default
 ---
 apiVersion: v1
 kind: Service

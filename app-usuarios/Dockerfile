@@ -11,3 +11,5 @@ COPY build/libs/app-usuarios-1.0-SNAPSHOT.jar .
 
 # Establece el comando por defecto para ejecutar la aplicación
 CMD ["java", "-jar", "app-usuarios-1.0-SNAPSHOT.jar"]
+
+

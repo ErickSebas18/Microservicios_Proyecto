@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   keycloak:
-    image: ericksebas/keycloak:latest
+    image: ericksebas/keycloak-custom:latest
     container_name: keycloak
     ports:
       - "8080:8080"

@@ -20,7 +20,7 @@ body {
     background: #fff7ed;
     border-radius: 14px;
     box-shadow: 0 10px 35px rgba(92, 58, 0, 0.25);
-    overflow: hidden; /* sin scroll */
+    overflow: auto; /* sin scroll */
 }
 
 #kc-logo {

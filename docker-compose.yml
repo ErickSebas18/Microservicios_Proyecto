@@ -14,7 +14,7 @@ services:
     command: ["start-dev"]
 
   dbserver:
-    image: postgres:alpine
+    image: postgres:16-alpine
     container_name: postgres
     environment:
       POSTGRES_USER: admin

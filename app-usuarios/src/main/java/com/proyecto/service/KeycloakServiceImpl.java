@@ -28,23 +28,20 @@ public class KeycloakServiceImpl implements IKeycloakService{
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private KeycloakProvider keycloakProvider;
-
     @Override
     public List<UserRepresentation> findAllUsers() {
-        return keycloakProvider.getRealmResource().users().list();
+        return KeycloakProvider.getRealmResource().users().list();
     }
 
     @Override
     public UserRepresentation searchUserByEmail(String mail) {
-        return keycloakProvider.getRealmResource().users().searchByEmail(mail, true).getFirst();
+        return KeycloakProvider.getRealmResource().users().searchByEmail(mail, true).getFirst();
     }
 
     @Override
     public String createUser(@NonNull UsuarioKeycloakDto usuarioDTO) {
         try {
-            UsersResource userResource = keycloakProvider.getUsersResource();
+            UsersResource userResource = KeycloakProvider.getUsersResource();
 
             // Verificar si el correo ya existe
             List<UserRepresentation> existingUsers = userResource.search(usuarioDTO.getEmail(), true);
@@ -81,7 +78,7 @@ public class KeycloakServiceImpl implements IKeycloakService{
             userResource.get(userId).resetPassword(passwordCred);
 
             // Asignar Rol
-            RealmResource realmResource = keycloakProvider.getRealmResource();
+            RealmResource realmResource = KeycloakProvider.getRealmResource();
             RoleRepresentation roleRepresentation = realmResource.roles()
                     .get(usuarioDTO.getRol()).toRepresentation();
             userResource.get(userId).roles().realmLevel()
@@ -114,13 +111,13 @@ public class KeycloakServiceImpl implements IKeycloakService{
     @Override
     public void deleteUser(String userId) {
 
-        UsersResource usersResource = keycloakProvider.getUsersResource();
+        UsersResource usersResource = KeycloakProvider.getUsersResource();
         usersResource.get(userId).remove();
 
     }
     @Override
     public void updateUser(String userId, @NonNull UsuarioKeycloakDto usuarioDTO) {
-        UsersResource usersResource = keycloakProvider.getUsersResource();
+        UsersResource usersResource = KeycloakProvider.getUsersResource();
         UserResource userResource = usersResource.get(userId);
 
         // Verificar si el email está siendo usado por otro usuario
@@ -146,7 +143,7 @@ public class KeycloakServiceImpl implements IKeycloakService{
         userResource.update(userRepresentation);
 
         // Actualizar rol
-        RealmResource realmResource = keycloakProvider.getRealmResource();
+        RealmResource realmResource = KeycloakProvider.getRealmResource();
         RoleRepresentation newRole = realmResource.roles().get(usuarioDTO.getRol()).toRepresentation();
 
         // Eliminar roles actuales, excepto el por defecto

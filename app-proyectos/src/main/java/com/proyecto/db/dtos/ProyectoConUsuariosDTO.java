@@ -2,11 +2,13 @@ package com.proyecto.db.dtos;
 
 import com.proyecto.db.Proyecto;
 import com.proyecto.db.Tarea;
+import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
 public class ProyectoConUsuariosDTO {
 
     private Integer id;

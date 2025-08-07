@@ -29,7 +29,7 @@ public class ProyectoLifeCycle implements ApplicationListener<WebServerInitializ
     @Value("${consul.token:}")
     private String consulToken;
 
-    private String serviceName = "app-proyectos";
+    private final String serviceName = "app-proyectos";
 
     private String serviceId;
     @Value("${server.port}")

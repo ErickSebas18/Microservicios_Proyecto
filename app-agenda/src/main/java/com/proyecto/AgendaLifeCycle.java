@@ -35,7 +35,7 @@ public class AgendaLifeCycle implements ApplicationListener<WebServerInitialized
     @Value("${consul.token:}")
     private String consulToken;
 
-    private String serviceName = "app-agenda";
+    private final String serviceName = "app-agenda";
 
     private String serviceId;
     @Value("${server.port}")

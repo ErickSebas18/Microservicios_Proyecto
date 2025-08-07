@@ -1,0 +1,15 @@
+api:
+  insecure: true
+  dashboard: true
+  dashboardEntryPoint: traefik
+
+entryPoints:
+  http:
+    address: ":7070"
+  traefik:
+    address: ":5050"
+
+providers:
+  file:
+    filename: apps.yml
+    watch: true

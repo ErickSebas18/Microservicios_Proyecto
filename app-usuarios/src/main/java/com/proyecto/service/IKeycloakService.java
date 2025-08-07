@@ -6,9 +6,9 @@ import org.keycloak.representations.idm.UserRepresentation;
 import java.util.List;
 
 public interface IKeycloakService {
-    public List<UserRepresentation> findAllUsers();
-    public UserRepresentation searchUserByEmail(String mail);
-    public String createUser(UsuarioKeycloakDto usuarioDTO);
-    public void deleteUser(String userId);
-    public void updateUser(String userId, UsuarioKeycloakDto usuarioDTO);
+    List<UserRepresentation> findAllUsers();
+    UserRepresentation searchUserByEmail(String mail);
+    String createUser(UsuarioKeycloakDto usuarioDTO);
+    void deleteUser(String userId);
+    void updateUser(String userId, UsuarioKeycloakDto usuarioDTO);
 }

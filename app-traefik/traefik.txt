@@ -1,0 +1,7 @@
+Para ejecutar traefik
+
+traefik -api.insecure true
+
+Consola
+
+localhost:5050/dashboard

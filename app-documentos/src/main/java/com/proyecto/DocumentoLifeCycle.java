@@ -29,7 +29,7 @@ public class DocumentoLifeCycle implements ApplicationListener<WebServerInitiali
     @Value("${consul.token:}")
     private String consulToken;
 
-    private String serviceName = "app-documentos";
+    private final String serviceName = "app-documentos";
 
     private String serviceId;
     @Value("${server.port}")

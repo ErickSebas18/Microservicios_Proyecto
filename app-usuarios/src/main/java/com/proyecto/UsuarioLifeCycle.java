@@ -27,7 +27,7 @@ public class UsuarioLifeCycle implements ApplicationListener<WebServerInitialize
     @Value("${consul.token:}")
     private String consulToken;
 
-    private String serviceName = "app-usuarios";
+    private final String serviceName = "app-usuarios";
 
     private String serviceId;
     @Value("${server.port}")

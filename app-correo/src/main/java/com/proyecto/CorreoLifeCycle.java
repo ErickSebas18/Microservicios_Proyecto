@@ -35,7 +35,7 @@ public class CorreoLifeCycle implements ApplicationListener<WebServerInitialized
     @Value("${consul.token:}")
     private String consulToken;
 
-    private String serviceName = "app-correo";
+    private final String serviceName = "app-correo";
 
     private String serviceId;
     @Value("${server.port}")

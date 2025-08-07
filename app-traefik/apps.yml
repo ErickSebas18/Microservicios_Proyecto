@@ -1,0 +1,48 @@
+http:
+  routers:
+    router-app-usuarios:
+      entryPoints:
+        - http
+      service: service-app-usuarios
+      rule: Host(`usuarios.projecto.com`)
+    router-app-proyectos:
+      entryPoints:
+        - http
+      service: service-app-proyectos
+      rule: Host(`proyectos.projecto.com`)
+    router-app-documentos:
+      entryPoints:
+        - http
+      service: service-app-documentos
+      rule: Host(`documentos.projecto.com`)
+    router-app-correo:
+      entryPoints:
+        - http
+      service: service-app-correo
+      rule: Host(`correo.projecto.com`)
+    router-app-agenda:
+      entryPoints:
+        - http
+      service: service-app-agenda
+      rule: Host(`agenda.projecto.com`)
+  services:
+    service-app-usuarios:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost:9090'
+    service-app-proyectos:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost:9091'
+    service-app-documentos:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost:9092'
+    service-app-correo:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost:9094'
+    service-app-agenda:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost:9093'

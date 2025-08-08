@@ -1,7 +1,6 @@
 api:
   insecure: true
   dashboard: true
-  dashboardEntryPoint: traefik
 
 entryPoints:
   http:

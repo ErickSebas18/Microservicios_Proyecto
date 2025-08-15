@@ -4,27 +4,38 @@ http:
       entryPoints:
         - http
       service: service-app-usuarios
-      rule: Host(`usuarios.projecto.com`)
+      rule: "PathPrefix(`/usuarios`)"
     router-app-proyectos:
       entryPoints:
         - http
       service: service-app-proyectos
-      rule: Host(`proyectos.projecto.com`)
+      rule: "PathPrefix(`/proyectos`)"
     router-app-documentos:
       entryPoints:
         - http
       service: service-app-documentos
-      rule: Host(`documentos.projecto.com`)
+      rule: "PathPrefix(`/documentos`)"
     router-app-correo:
       entryPoints:
         - http
       service: service-app-correo
-      rule: Host(`correo.projecto.com`)
+      rule: "PathPrefix(`/email`)"
     router-app-agenda:
       entryPoints:
         - http
       service: service-app-agenda
-      rule: Host(`agenda.projecto.com`)
+      rule: "PathPrefix(`/eventos`)"
+    router-app-tareas:
+      entryPoints:
+        - http
+      service: service-app-tareas
+      rule: "PathPrefix(`/tareas`)"
+    router-app-comentarios:
+      entryPoints:
+        - http
+      service: service-app-comentarios
+      rule: "PathPrefix(`/comentarios`)"
+
   services:
     service-app-usuarios:
       loadBalancer:
@@ -46,3 +57,11 @@ http:
       loadBalancer:
         servers:
           - url: 'http://localhost:9093'
+    service-app-tareas:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost:9091'
+    service-app-comentarios:
+      loadBalancer:
+        servers:
+          - url: 'http://localhost:9092'
